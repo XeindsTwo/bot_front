@@ -1,0 +1,72 @@
+.alpha-slider {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  user-select: none;
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+
+  &::-webkit-scrollbar {
+    height: 6px;
+    background: transparent;
+  }
+
+  scrollbar-width: thin;
+  scrollbar-color: #4D4D4E transparent;
+}
+
+.alpha-card {
+  width: 210px;
+  flex: 1 0 auto;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 16px 10px 12px;
+  border-radius: 16px;
+  background-color: var(--black-100);
+}
+
+.alpha-card__left {
+  display: flex;
+  gap: 11px;
+}
+
+.alpha-card__info {
+  display: flex;
+  gap: 3px;
+  flex-direction: column;
+}
+
+.alpha-symbol {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.alpha-marketcap {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.alpha-image {
+  border-radius: 50%;
+}
+
+.alpha-card__changes {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  align-items: flex-end;
+  font-weight: 500;
+  font-family: var(--font-base-medium);
+}
+
+.alpha-price {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.alpha-change.negative {
+  color: var(--red);
+}
+
+.alpha-change.positive {
+  color: var(--primary-color);
+}

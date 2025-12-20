@@ -1,0 +1,27 @@
+@font-face {
+  font-family: 'Binance PLEX';
+  src: url('../fonts/BinancePlexRegular.woff2') format('woff2'),
+  url('../fonts/BinancePlexRegular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Binance PLEX';
+  src: url('../fonts/BinancePlex-SemiBold.woff2') format('woff2'),
+  url('../fonts/BinancePlex-SemiBold.woff') format('woff');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Binance PLEX Binance Plex';
+  src: url('../fonts/BinancePlex-Medium.woff2') format('woff2'),
+  url('../fonts/BinancePlex-Medium.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
