@@ -1,0 +1,14 @@
+.copy-info {
+  position: relative;
+
+  &:hover {
+    .badge {
+      display: flex;
+    }
+  }
+
+  &__btn {
+    @include flex-center;
+    display: none;
+  }
+}

@@ -54,6 +54,7 @@ select {
   outline: transparent;
   border: none;
   appearance: none;
+  color: inherit;
 }
 
 button {

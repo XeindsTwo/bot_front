@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react'
-import { fetchTokens } from './api/walletApi'
+import {useEffect, useState} from 'react'
+import {fetchTokens} from './api/walletApi'
 import HomePage from './pages/HomePage'
+import FooterPanel from "@/components/FooterPanel/FooterPanel.jsx";
 
 function App() {
   const [tokens, setTokens] = useState([])
@@ -10,7 +11,7 @@ function App() {
   useEffect(() => {
     fetchTokens()
       .then(data => {
-        setTokens(data.map(t => ({ ...t, symbol: t.symbol.toUpperCase() })))
+        setTokens(data.map(t => ({...t, symbol: t.symbol.toUpperCase()})))
       })
       .finally(() => setLoading(false))
   }, [])
