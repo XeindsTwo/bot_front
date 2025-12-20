@@ -1,0 +1,72 @@
+.token-item {
+  @include flex-between-center-gap(30);
+
+  &:hover {
+    .copy-info__btn {
+      display: flex;
+    }
+  }
+
+  &__left {
+    @include flex-align-center(13);
+  }
+
+  &__info {
+    @include flex-column(3);
+
+    &-top {
+      @include flex-align-center(5);
+    }
+  }
+
+  &__name {
+    @include flex-align-center(5);
+    font-size: 17px;
+    font-weight: 600;
+    text-transform: uppercase;
+
+    span {
+      text-transform: capitalize;
+      font-size: 12px;
+      line-height: 1;
+      padding: 4px 8px;
+      border-radius: 40px;
+      background-color: var(--black-300);
+    }
+  }
+
+  &__price {
+    @include flex-align-center(4);
+    letter-spacing: -0.01em;
+    font-weight: 500;
+    color: var(--gray);
+    font-family: var(--font-base-medium);
+  }
+
+  &__change {
+    &.negative {
+      color: var(--red);
+    }
+
+    &.positive {
+      color: var(--primary-color);
+    }
+  }
+
+  &__right {
+    @include flex-column(4);
+    justify-content: space-between;
+    align-items: flex-end;
+    font-weight: 500;
+    font-family: var(--font-base-medium);
+  }
+
+  &__value {
+    font-size: 17px;
+  }
+
+  &__total {
+    color: var(--gray);
+    letter-spacing: -0.01em;
+  }
+}

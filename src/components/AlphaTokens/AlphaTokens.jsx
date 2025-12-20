@@ -11,7 +11,7 @@ const AlphaTokens = () => {
   useEffect(() => {
     const fetchTokens = async () => {
       try {
-        const res = await fetch('http://localhost:8000/api/alpha-tokens')
+        const res = await fetch('http://localhost:8000/api/alpha/tokens')
         const data = await res.json()
 
         const tokens = data.map(token => ({

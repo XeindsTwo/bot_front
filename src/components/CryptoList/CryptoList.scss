@@ -1,105 +1,9 @@
 .crypto-list {
   padding-bottom: 22px;
 
-  &__top {
-    @include flex-between-center-gap(20);
-    align-items: flex-start;
-    margin-bottom: 15px;
-    border-bottom: 1px solid var(--black-200);
-  }
-
-  &__tabs {
-    @include flex-align-center(16);
-    padding-left: 12px;
-  }
-
-  &__tab {
-    font-size: 16px;
-    font-weight: 600;
-    padding-bottom: 12px;
-    position: relative;
-    color: rgba(#fff, .6);
-
-    &::after {
-      @include pseudo;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      border-radius: 2px;
-      height: 4px;
-      background-color: transparent;
-    }
-
-    &.active {
-      color: #fff;
-
-      &::after {
-        background-color: var(--primary-color);
-      }
-    }
-  }
-
-  &__history {
-    @include flex-center;
-  }
-
   &__items {
     @include flex-column(16);
     margin-bottom: 10px;
-  }
-
-  &__item {
-    @include flex-between-center-gap(30);
-
-    &:hover {
-      .copy-info__btn {
-        display: flex;
-      }
-    }
-  }
-
-  &__left {
-    @include flex-align-center(13);
-  }
-
-  &__circle {
-    position: relative;
-
-    img {
-      @include objectCoverBg;
-      border-radius: 50%;
-    }
-  }
-
-  &__small {
-    border: 1.5px solid #1B1B1C;
-    position: absolute;
-    right: -5px;
-    bottom: -4px;
-  }
-
-  &__info {
-    @include flex-column(3);
-
-    &-top {
-      @include flex-align-center(5);
-    }
-  }
-
-  &__name {
-    @include flex-align-center(5);
-    font-size: 17px;
-    font-weight: 600;
-    text-transform: uppercase;
-
-    span {
-      text-transform: capitalize;
-      font-size: 12px;
-      line-height: 1;
-      padding: 4px 8px;
-      border-radius: 40px;
-      background-color: var(--black-300);
-    }
   }
 
   &__manage {
@@ -107,40 +11,5 @@
     color: var(--primary-color);
     @include flex-center;
     margin: 0 auto;
-  }
-
-  &__price {
-    @include flex-align-center(4);
-    letter-spacing: -0.01em;
-    font-weight: 500;
-    color: var(--gray);
-    font-family: var(--font-base-medium);
-  }
-
-  &__change {
-    &.negative {
-      color: var(--red);
-    }
-
-    &.positive {
-      color: var(--primary-color);
-    }
-  }
-
-  &__right {
-    @include flex-column(4);
-    justify-content: space-between;
-    align-items: flex-end;
-    font-weight: 500;
-    font-family: var(--font-base-medium);
-  }
-
-  &__value {
-    font-size: 17px;
-  }
-
-  &__total {
-    color: var(--gray);
-    letter-spacing: -0.01em;
   }
 }

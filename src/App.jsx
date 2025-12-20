@@ -1,27 +1,63 @@
-import {useEffect, useState} from 'react'
-import {fetchTokens} from './api/walletApi'
+import { useEffect, useRef, useState } from 'react'
 import HomePage from './pages/HomePage'
-import FooterPanel from "@/components/FooterPanel/FooterPanel.jsx";
 
 function App() {
   const [tokens, setTokens] = useState([])
-  const [, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true)
   const [hideBalance, setHideBalance] = useState(false)
+  const [showPulse, setShowPulse] = useState(true)
+  const didInit = useRef(false)
+
+  const refreshBalances = async () => {
+    try {
+      const response = await fetch('http://localhost:8000/api/tokens/refresh-balances', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      })
+
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.detail || 'Ошибка обновления')
+      }
+
+      const result = await response.json()
+
+      if (result.success && result.tokens) {
+        setTokens(result.tokens)
+      }
+    } catch (error) {
+      console.error('Ошибка обновления:', error)
+      if (tokens.length === 0) {
+        alert(`Ошибка загрузки: ${error.message}`)
+      } else {
+        console.log(`Не удалось обновить: ${error.message}`)
+      }
+    }
+  }
 
   useEffect(() => {
-    fetchTokens()
-      .then(data => {
-        setTokens(data.map(t => ({...t, symbol: t.symbol.toUpperCase()})))
+    if (didInit.current) return
+    didInit.current = true
+
+    const randomDelay = 2000 + Math.floor(Math.random() * 1000)
+
+    setTimeout(() => {
+      refreshBalances().finally(() => {
+        setLoading(false)
+        setTimeout(() => setShowPulse(false), 300)
       })
-      .finally(() => setLoading(false))
+    }, randomDelay)
   }, [])
 
   return (
     <div className="extension-wrapper">
       <HomePage
         tokens={tokens}
+        loading={loading}
         hideBalance={hideBalance}
         setHideBalance={setHideBalance}
+        onRefresh={refreshBalances}
+        showPulse={showPulse}
       />
     </div>
   )

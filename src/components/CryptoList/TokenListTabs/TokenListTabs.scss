@@ -1,0 +1,41 @@
+.token-list-tabs {
+  @include flex-between-center-gap(20);
+  align-items: flex-start;
+  margin-bottom: 15px;
+  border-bottom: 1px solid var(--black-200);
+
+  &__buttons {
+    @include flex-align-center(16);
+    padding-left: 12px;
+  }
+
+  &__button {
+    font-size: 16px;
+    font-weight: 600;
+    padding-bottom: 12px;
+    position: relative;
+    color: rgba(#fff, .6);
+
+    &::after {
+      @include pseudo;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      border-radius: 2px;
+      height: 4px;
+      background-color: transparent;
+    }
+
+    &.active {
+      color: #fff;
+
+      &::after {
+        background-color: var(--primary-color);
+      }
+    }
+  }
+
+  &__history {
+    @include flex-center;
+  }
+}

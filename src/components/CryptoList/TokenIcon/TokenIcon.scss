@@ -1,0 +1,15 @@
+.token-icon {
+  position: relative;
+
+  img {
+    @include objectCoverBg;
+    border-radius: 50%;
+  }
+
+  &__network {
+    border: 1.5px solid #1B1B1C;
+    position: absolute;
+    right: -5px;
+    bottom: -4px;
+  }
+}

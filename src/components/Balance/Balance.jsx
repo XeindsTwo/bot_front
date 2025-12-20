@@ -1,130 +1,41 @@
-import {useState, useEffect, useRef} from 'react'
+import { useState } from 'react'
 import './Balance.scss'
-
 import RefreshIcon from "../../assets/images/icons/refresh_balance.svg"
 import ShowBalance from "../../assets/images/icons/show_balance.svg"
 import HideIcon from "../../assets/images/icons/hide_balance.svg"
 
-const Balance = ({tokens, hideBalance, setHideBalance, onRefresh}) => {
+const Balance = ({ tokens, hideBalance, setHideBalance, onRefresh, showPulse }) => {
   const [refreshing, setRefreshing] = useState(false)
-  const [showPulse, setShowPulse] = useState(false)
-  const [prevTotal, setPrevTotal] = useState(0)
-  const [currentBalance, setCurrentBalance] = useState(0)
-  const [isInitialLoading, setIsInitialLoading] = useState(true)
-  const isInitialLoad = useRef(true)
+  const [animationDuration, setAnimationDuration] = useState(3000)
 
-  const total = tokens.reduce((sum, t) => sum + (t.balance_usd || 0), 0)
+  const currentBalance = tokens.reduce((sum, t) => sum + (t.balance_usd || 0), 0)
+  const roundedBalance = parseFloat(currentBalance.toFixed(2))
 
-  useEffect(() => {
-    const initialUpdate = async () => {
-      if (isInitialLoad.current) {
-        isInitialLoad.current = false
-
-        setCurrentBalance(0)
-        setIsInitialLoading(true)
-        setShowPulse(true)
-
-        try {
-          const randomDelay = Math.floor(Math.random() * 1000) + 2000 // 2000-3000ms
-          console.log(`Авто-обновление: задержка ${randomDelay}ms`)
-
-          const refreshRes = await fetch('http://localhost:8000/api/refresh-balances', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            }
-          })
-
-          if (!refreshRes.ok) {
-            throw new Error('Ошибка обновления балансов')
-          }
-
-          const result = await refreshRes.json()
-          await new Promise(resolve => setTimeout(resolve, randomDelay))
-
-          if (result.success) {
-            setCurrentBalance(result.total_balance)
-          }
-
-          setIsInitialLoading(false)
-          setShowPulse(false)
-
-          if (onRefresh) {
-            await onRefresh()
-          }
-
-        } catch (error) {
-          console.error('Ошибка авто-обновления:', error)
-          setIsInitialLoading(false)
-          setShowPulse(false)
-        }
-      }
-    }
-    initialUpdate()
-  }, [])
-
-  useEffect(() => {
-    if (!isInitialLoading) {
-      setCurrentBalance(total)
-    }
-  }, [total, isInitialLoading])
-
-  const formattedTotal = `$${currentBalance.toLocaleString('de-DE', {
+  const formattedTotal = `$${roundedBalance.toLocaleString('de-DE', {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2
   })}`
-
-  useEffect(() => {
-    if (prevTotal !== 0 && prevTotal !== currentBalance) {
-      setShowPulse(true)
-      const timer = setTimeout(() => setShowPulse(false), 3000)
-      return () => clearTimeout(timer)
-    }
-    setPrevTotal(currentBalance)
-  }, [currentBalance])
 
   const handleRefresh = async () => {
     if (refreshing) return
 
     setRefreshing(true)
-    setShowPulse(true)
+    setAnimationDuration(3000)
 
     try {
-      const randomDelay = Math.floor(Math.random() * 1000) + 2000 // 2000-3000ms
-      console.log(`Ручное обновление: задержка ${randomDelay}ms`)
-
-      const refreshRes = await fetch('http://localhost:8000/api/refresh-balances', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-
-      if (!refreshRes.ok) {
-        throw new Error('Ошибка обновления балансов')
-      }
-
-      const result = await refreshRes.json()
-
+      const randomDelay = 2000 + Math.floor(Math.random() * 1000)
       await new Promise(resolve => setTimeout(resolve, randomDelay))
-
-      if (result.success) {
-        setCurrentBalance(result.total_balance)
-      }
-
-      setShowPulse(false)
-
-      if (onRefresh) {
-        await onRefresh()
-      }
-
+      await onRefresh()
+      await new Promise(resolve => setTimeout(resolve, 300))
     } catch (error) {
       console.error('Ошибка обновления:', error)
-      setShowPulse(false)
     } finally {
       setRefreshing(false)
     }
   }
+
+  const pulseActive = showPulse || refreshing
+  const refreshButtonActive = showPulse || refreshing
 
   return (
     <div className="balance">
@@ -133,7 +44,8 @@ const Balance = ({tokens, hideBalance, setHideBalance, onRefresh}) => {
           <span className="balance__hidden">•••••</span>
         ) : (
           <span
-            className={`balance__amount ${showPulse ? 'pulsing-smooth' : ''}`}
+            className={`balance__amount ${pulseActive ? 'pulsing-smooth' : ''}`}
+            style={pulseActive ? { animationDuration: `${animationDuration}ms` } : {}}
           >
             {formattedTotal}
           </span>
@@ -142,20 +54,21 @@ const Balance = ({tokens, hideBalance, setHideBalance, onRefresh}) => {
 
       <div className="balance__actions">
         <button
-          className={`balance__btn ${refreshing ? 'balance__btn--refreshing' : ''}`}
-          type="button"
+          className={`balance__btn ${refreshButtonActive ? 'balance__btn--refreshing' : ''}`}
           onClick={handleRefresh}
-          disabled={refreshing}
-          aria-label="Refresh balance"
+          disabled={refreshing || showPulse}
         >
-          <RefreshIcon className={refreshing ? 'refreshing-icon' : ''}/>
+          <RefreshIcon
+            className={refreshButtonActive ? 'refreshing-icon' : ''}
+            style={refreshButtonActive ? { animationDuration: `${animationDuration}ms` } : {}}
+          />
         </button>
+
         <button
           className="balance__btn"
           onClick={() => setHideBalance(!hideBalance)}
-          aria-label={hideBalance ? "Show balance" : "Hide balance"}
         >
-          {hideBalance ? <HideIcon/> : <ShowBalance/>}
+          {hideBalance ? <HideIcon /> : <ShowBalance />}
         </button>
       </div>
     </div>

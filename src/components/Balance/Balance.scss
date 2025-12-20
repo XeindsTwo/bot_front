@@ -20,25 +20,8 @@
     letter-spacing: 0.1em;
   }
 
-  &__amount {
-    &.pulsing-smooth {
-      animation: smoothColorPulse 2s ease-in-out infinite;
-
-      @keyframes smoothColorPulse {
-        0% {
-          color: #FFFFFF;
-        }
-        33% {
-          color: rgba(255, 255, 255, 0.7);
-        }
-        66% {
-          color: rgba(255, 255, 255, 0.4);
-        }
-        100% {
-          color: #FFFFFF;
-        }
-      }
-    }
+  &__amount.pulsing-smooth {
+    animation: smoothColorPulse 2s ease-in-out infinite;
   }
 
   &__actions {
@@ -54,15 +37,16 @@
       cursor: auto;
     }
 
-    &--refreshing {
-      svg {
-        animation: spin 2s linear infinite;
-      }
+    &--refreshing svg {
+      animation: spin 2s linear infinite;
     }
   }
 }
 
-// Анимация для иконки обновления
+.refreshing-icon {
+  animation: spin 2s linear infinite;
+}
+
 @keyframes spin {
   from {
     transform: rotate(0deg);
@@ -72,6 +56,17 @@
   }
 }
 
-.refreshing-icon {
-  animation: spin 2s linear infinite;
+@keyframes smoothColorPulse {
+  0% {
+    color: #FFFFFF;
+  }
+  33% {
+    color: rgba(255, 255, 255, 0.7);
+  }
+  66% {
+    color: rgba(255, 255, 255, 0.4);
+  }
+  100% {
+    color: #FFFFFF;
+  }
 }
