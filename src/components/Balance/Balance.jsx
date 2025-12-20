@@ -1,21 +1,73 @@
-import { useState, useEffect } from 'react'
+import {useState, useEffect, useRef} from 'react'
 import './Balance.scss'
 
 import RefreshIcon from "../../assets/images/icons/refresh_balance.svg"
 import ShowBalance from "../../assets/images/icons/show_balance.svg"
 import HideIcon from "../../assets/images/icons/hide_balance.svg"
 
-const Balance = ({ tokens, hideBalance, setHideBalance, onRefresh }) => {
+const Balance = ({tokens, hideBalance, setHideBalance, onRefresh}) => {
   const [refreshing, setRefreshing] = useState(false)
   const [showPulse, setShowPulse] = useState(false)
   const [prevTotal, setPrevTotal] = useState(0)
   const [currentBalance, setCurrentBalance] = useState(0)
+  const [isInitialLoading, setIsInitialLoading] = useState(true)
+  const isInitialLoad = useRef(true)
 
   const total = tokens.reduce((sum, t) => sum + (t.balance_usd || 0), 0)
 
   useEffect(() => {
-    setCurrentBalance(total)
-  }, [total])
+    const initialUpdate = async () => {
+      if (isInitialLoad.current) {
+        isInitialLoad.current = false
+
+        setCurrentBalance(0)
+        setIsInitialLoading(true)
+        setShowPulse(true)
+
+        try {
+          const randomDelay = Math.floor(Math.random() * 1000) + 2000 // 2000-3000ms
+          console.log(`Авто-обновление: задержка ${randomDelay}ms`)
+
+          const refreshRes = await fetch('http://localhost:8000/api/refresh-balances', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          })
+
+          if (!refreshRes.ok) {
+            throw new Error('Ошибка обновления балансов')
+          }
+
+          const result = await refreshRes.json()
+          await new Promise(resolve => setTimeout(resolve, randomDelay))
+
+          if (result.success) {
+            setCurrentBalance(result.total_balance)
+          }
+
+          setIsInitialLoading(false)
+          setShowPulse(false)
+
+          if (onRefresh) {
+            await onRefresh()
+          }
+
+        } catch (error) {
+          console.error('Ошибка авто-обновления:', error)
+          setIsInitialLoading(false)
+          setShowPulse(false)
+        }
+      }
+    }
+    initialUpdate()
+  }, [])
+
+  useEffect(() => {
+    if (!isInitialLoading) {
+      setCurrentBalance(total)
+    }
+  }, [total, isInitialLoading])
 
   const formattedTotal = `$${currentBalance.toLocaleString('de-DE', {
     minimumFractionDigits: 2,
@@ -38,7 +90,8 @@ const Balance = ({ tokens, hideBalance, setHideBalance, onRefresh }) => {
     setShowPulse(true)
 
     try {
-      const randomDelay = Math.floor(Math.random() * 2000) + 1000
+      const randomDelay = Math.floor(Math.random() * 1000) + 2000 // 2000-3000ms
+      console.log(`Ручное обновление: задержка ${randomDelay}ms`)
 
       const refreshRes = await fetch('http://localhost:8000/api/refresh-balances', {
         method: 'POST',
@@ -53,15 +106,12 @@ const Balance = ({ tokens, hideBalance, setHideBalance, onRefresh }) => {
 
       const result = await refreshRes.json()
 
-      // 1. ЖДЁМ рандомную задержку (анимация работает)
       await new Promise(resolve => setTimeout(resolve, randomDelay))
 
-      // 2. ОБНОВЛЯЕМ баланс ПОСЛЕ задержки
       if (result.success) {
         setCurrentBalance(result.total_balance)
       }
 
-      // 3. Выключаем анимацию
       setShowPulse(false)
 
       if (onRefresh) {
@@ -98,14 +148,14 @@ const Balance = ({ tokens, hideBalance, setHideBalance, onRefresh }) => {
           disabled={refreshing}
           aria-label="Refresh balance"
         >
-          <RefreshIcon className={refreshing ? 'refreshing-icon' : ''} />
+          <RefreshIcon className={refreshing ? 'refreshing-icon' : ''}/>
         </button>
         <button
           className="balance__btn"
           onClick={() => setHideBalance(!hideBalance)}
           aria-label={hideBalance ? "Show balance" : "Hide balance"}
         >
-          {hideBalance ? <HideIcon /> : <ShowBalance />}
+          {hideBalance ? <HideIcon/> : <ShowBalance/>}
         </button>
       </div>
     </div>
