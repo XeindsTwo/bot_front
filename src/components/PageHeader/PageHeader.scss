@@ -1,0 +1,38 @@
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  margin: 23px 0 18px;
+
+  &__back {
+    @include flex-center;
+    width: 24px;
+    height: 24px;
+    border-radius: 8px;
+  }
+
+  &__title {
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.2;
+    text-align: center;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  &__right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 40px;
+  }
+
+  &__settings {
+    @include flex-center;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+  }
+}

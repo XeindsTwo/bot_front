@@ -1,0 +1,24 @@
+.transactions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 26px;
+}
+
+.transactions-date-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.date-label {
+  font-weight: 600;
+  color: var(--gray);
+  margin-bottom: 20px;
+  display: inline-block;
+}
+
+.transactions-group {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}

@@ -1,0 +1,31 @@
+.trust-loading-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 17px;
+  background: #23402E;
+  border-radius: 66px;
+  margin: 0 auto;
+  width: fit-content;
+}
+
+.trust-spinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid #536A5D;
+  border-top: 3px solid #B3BCB9;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.trust-loading-text {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

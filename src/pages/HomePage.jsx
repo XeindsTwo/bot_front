@@ -7,7 +7,7 @@ import FooterPanel from "@/components/FooterPanel/FooterPanel.jsx"
 
 const HomePage = ({ tokens, loading, hideBalance, setHideBalance, onRefresh, showPulse }) => {
   return (
-    <div className="trust-app">
+    <>
       <Header />
       <Balance
         tokens={tokens}
@@ -24,7 +24,7 @@ const HomePage = ({ tokens, loading, hideBalance, setHideBalance, onRefresh, sho
         </div>
       </div>
       <FooterPanel />
-    </div>
+    </>
   )
 }
 

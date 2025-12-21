@@ -10,7 +10,7 @@ const TokenListTabs = () => {
         <button className="token-list-tabs__button" type="button">NFTs</button>
         <button className="token-list-tabs__button" type="button">Approvals</button>
       </div>
-      <Link className="token-list-tabs__history" to="/#">
+      <Link className="token-list-tabs__history" to="/history">
         <HistoryIcon/>
       </Link>
     </div>

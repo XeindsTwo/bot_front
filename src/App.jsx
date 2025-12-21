@@ -1,64 +1,56 @@
-import { useEffect, useRef, useState } from 'react'
+import {useEffect, useRef, useState} from 'react'
+import {Routes, Route, useLocation} from 'react-router-dom'
 import HomePage from './pages/HomePage'
+import TransactionHistory from './pages/TransactionHistory/TransactionHistory'
+import TransitionSpinner from './components/TransitionSpinner/TransitionSpinner'
+import useTokenData from './hooks/useTokenData'
 
 function App() {
-  const [tokens, setTokens] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [hideBalance, setHideBalance] = useState(false)
-  const [showPulse, setShowPulse] = useState(true)
-  const didInit = useRef(false)
+  const {
+    tokens,
+    loading,
+    hideBalance,
+    setHideBalance,
+    showPulse,
+    refreshBalances
+  } = useTokenData()
 
-  const refreshBalances = async () => {
-    try {
-      const response = await fetch('http://localhost:8000/api/tokens/refresh-balances', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' }
-      })
-
-      if (!response.ok) {
-        const error = await response.json()
-        throw new Error(error.detail || 'Ошибка обновления')
-      }
-
-      const result = await response.json()
-
-      if (result.success && result.tokens) {
-        setTokens(result.tokens)
-      }
-    } catch (error) {
-      console.error('Ошибка обновления:', error)
-      if (tokens.length === 0) {
-        alert(`Ошибка загрузки: ${error.message}`)
-      } else {
-        console.log(`Не удалось обновить: ${error.message}`)
-      }
-    }
-  }
+  const [isTransitioning, setIsTransitioning] = useState(false)
+  const location = useLocation()
+  const prevLocation = useRef(location.pathname)
 
   useEffect(() => {
-    if (didInit.current) return
-    didInit.current = true
-
-    const randomDelay = 2000 + Math.floor(Math.random() * 1000)
-
-    setTimeout(() => {
-      refreshBalances().finally(() => {
-        setLoading(false)
-        setTimeout(() => setShowPulse(false), 300)
-      })
-    }, randomDelay)
-  }, [])
+    if (prevLocation.current !== location.pathname) {
+      setIsTransitioning(true)
+      const timer = setTimeout(() => {
+        setIsTransitioning(false)
+      }, 800)
+      return () => clearTimeout(timer)
+    }
+    prevLocation.current = location.pathname
+  }, [location.pathname])
 
   return (
     <div className="extension-wrapper">
-      <HomePage
-        tokens={tokens}
-        loading={loading}
-        hideBalance={hideBalance}
-        setHideBalance={setHideBalance}
-        onRefresh={refreshBalances}
-        showPulse={showPulse}
-      />
+      {isTransitioning && <TransitionSpinner/>}
+
+      <div className={`trust-app ${isTransitioning ? 'transitioning' : ''}`}>
+        <Routes location={location}>
+          <Route path="/" element={
+            <HomePage
+              tokens={tokens}
+              loading={loading}
+              hideBalance={hideBalance}
+              setHideBalance={setHideBalance}
+              onRefresh={refreshBalances}
+              showPulse={showPulse}
+            />
+          }/>
+          <Route path="/history" element={
+            <TransactionHistory isTransitioning={isTransitioning}/>
+          }/>
+        </Routes>
+      </div>
     </div>
   )
 }

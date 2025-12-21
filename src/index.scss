@@ -32,6 +32,7 @@ body::-webkit-scrollbar-thumb:hover {
 
 #root {
   height: 100%;
+  position: relative;
 }
 
 .extension-wrapper {
@@ -49,6 +50,13 @@ body::-webkit-scrollbar-thumb:hover {
   display: flex;
   flex-direction: column;
   height: 100%;
+  position: relative;
+
+  &.transitioning {
+    opacity: 0.3;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
 }
 
 .trust-main {

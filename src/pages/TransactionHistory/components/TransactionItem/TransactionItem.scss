@@ -1,0 +1,62 @@
+.transaction-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+
+  &__icon {
+    @include flex-center;
+    width: 36px;
+    height: 36px;
+  }
+}
+
+.transaction-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.transaction-main {
+  @include flex-align-center(5);
+}
+
+.transaction-type {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.transaction-status {
+  font-size: 12px;
+  line-height: 1;
+  padding: 6px 8px;
+  border-radius: 40px;
+  color: var(--orange);
+  font-weight: 600;
+}
+
+.transaction-address {
+  font-weight: 500;
+  font-family: var(--font-base-medium);
+  color: var(--gray);
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.amount {
+  font-size: 14px;
+  font-weight: 500;
+  font-family: var(--font-base-medium);
+
+  &.income {
+    color: var(--primary-color);
+  }
+
+  &.outcome {
+    color: var(--white);
+  }
+}
