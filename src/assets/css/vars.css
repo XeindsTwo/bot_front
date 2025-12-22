@@ -1,12 +1,17 @@
 :root {
   --primary-color: #48FF8A;
+  --green-100: #2A4737;
+  --green-200: #29AA74;
   --secondary-color: #1B1B1C;
   --black-100: #242426;
   --black-200: #2C2C2D;
   --black-300: #343436;
   --black-400: #343435;
   --gray: #A0A2A4;
+  --gray-100: #B0B2B4;
+  --gray-200: #B2B4B7;
   --red: #E85656;
+  --red-100: #ff5c5c;
   --white: #FFFFFF;
   --orange: #F4AC26;
   --font-base: 'Binance PLEX', sans-serif;

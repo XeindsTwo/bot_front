@@ -1,0 +1,45 @@
+.footer-panel-token {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+
+  &__item {
+    @include flex-column(10);
+    align-items: center;
+  }
+
+  &__link {
+    @include flex-center;
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    cursor: pointer;
+    background-color: #2B2B2E;
+
+    &:hover {
+      background-color: #454846;
+    }
+
+    &.accent {
+      background-color: var(--primary-color);
+
+      &:hover {
+        background-color: #91FFBD;
+      }
+
+      svg g path {
+        fill: #242426;
+      }
+    }
+
+    svg path {
+      fill: white;
+    }
+  }
+
+  &__name {
+    color: rgba(#fff, .9);
+    font-weight: 500;
+    font-family: var(--font-base-medium);
+  }
+}

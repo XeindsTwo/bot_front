@@ -7,24 +7,18 @@ import { usePendingStatus } from './hooks/usePendingStatus'
 const TransactionItem = ({ transaction, onStatusChange }) => {
   const { isPending, isSpinning } = usePendingStatus(transaction, onStatusChange)
 
-  // НОВАЯ функция форматирования суммы
   const formatAmount = (amount, displaySymbol) => {
     const num = parseFloat(amount)
     let formatted
 
-    // Для больших сумм (например, 1010) убираем десятичные
     if (num >= 1000) {
       formatted = num.toLocaleString('en-US', { maximumFractionDigits: 0 })
-    }
-    // Для сумм меньше 0.01 показываем больше знаков после запятой
-    else if (num < 0.01 && num > 0) {
+    } else if (num < 0.01 && num > 0) {
       formatted = num.toLocaleString('en-US', {
         minimumFractionDigits: 2,
         maximumFractionDigits: 8
       })
-    }
-    // Для обычных сумм (0.01 - 999.99) показываем 2-4 знака
-    else {
+    } else {
       formatted = num.toLocaleString('en-US', {
         minimumFractionDigits: 2,
         maximumFractionDigits: 4
@@ -57,7 +51,6 @@ const TransactionItem = ({ transaction, onStatusChange }) => {
         <div className="transaction-main">
           <span className="transaction-type">
             {transaction.type === 'income' ? 'Received' : 'Send'}
-            {/* Показываем токен после типа, например: "Received USDT" */}
             {transaction.display_symbol ? ` ${transaction.display_symbol}` : ''}
           </span>
           {isPending && (
@@ -78,7 +71,6 @@ const TransactionItem = ({ transaction, onStatusChange }) => {
         </div>
       </div>
 
-      {/* ИСПРАВЛЕННАЯ строка с суммой */}
       <span className={`amount ${transaction.type}`}>
         {transaction.type === 'income' ? '+' : '-'}
         {formatAmount(transaction.amount, transaction.display_symbol || '')}

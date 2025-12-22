@@ -1,7 +1,7 @@
 .token-list-tabs {
   @include flex-between-center-gap(20);
   align-items: flex-start;
-  margin-bottom: 15px;
+  margin-bottom: 16px;
   border-bottom: 1px solid var(--black-200);
 
   &__buttons {

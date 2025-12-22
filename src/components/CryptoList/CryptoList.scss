@@ -6,10 +6,39 @@
     margin-bottom: 10px;
   }
 
+  &__empty {
+    text-align: center;
+    padding: 40px 0;
+    color: var(--gray);
+  }
+
   &__manage {
     font-weight: 600;
     color: var(--primary-color);
     @include flex-center;
     margin: 0 auto;
+  }
+}
+
+.token-item-skeleton {
+  @include flex-between-center-gap(16);
+  min-height: 44.28px;
+
+  .token-item__left {
+    @include flex-align-center(13);
+  }
+
+  .token-item__info {
+    @include flex-column(3);
+
+    &-top {
+      @include flex-align-center(5);
+    }
+  }
+
+  .token-item__right {
+    @include flex-column(4);
+    justify-content: space-between;
+    align-items: flex-end;
   }
 }

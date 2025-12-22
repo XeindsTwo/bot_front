@@ -1,0 +1,22 @@
+.btn {
+  @include flex-center;
+  margin-top: auto;
+  padding: 15px;
+  font-size: 17px;
+  background: var(--primary-color);
+  color: var(--secondary-color);
+  text-align: center;
+  border-radius: 45px;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+
+  &:hover {
+    background: #91FFBD;
+  }
+
+  &:disabled {
+    opacity: .9;
+    pointer-events: none;
+    background-color: #618D73;
+  }
+}

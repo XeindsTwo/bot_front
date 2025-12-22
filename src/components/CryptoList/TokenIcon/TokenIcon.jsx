@@ -2,7 +2,12 @@ import './TokenIcon.scss'
 
 const TokenIcon = ({symbol, size = 40, network}) => {
   const getIconPath = (sym) => {
-    const lowerSymbol = sym.toLowerCase()
+    let lowerSymbol = sym.toLowerCase()
+
+    if (lowerSymbol.includes('usdt')) {
+      return '/images/tokens/usdt.png'
+    }
+
     return `/images/tokens/${lowerSymbol}.png`
   }
 

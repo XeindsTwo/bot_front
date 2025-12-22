@@ -1,0 +1,29 @@
+.chart {
+  &__img {
+    width: 100%;
+    object-fit: cover;
+    display: block;
+    margin-bottom: 12px;
+  }
+
+  &__actions {
+    @include flex-align-center(18);
+    justify-content: center;
+    margin-bottom: 18px;
+  }
+
+  &__btn {
+    @include flex-center;
+    border-radius: 2px;
+    line-height: 1;
+    font-size: 13px;
+    font-weight: 600;
+    width: 30px;
+    height: 32px;
+    color: rgba(#fff, .9);
+
+    &.active {
+      background-color: var(--black-100);
+    }
+  }
+}

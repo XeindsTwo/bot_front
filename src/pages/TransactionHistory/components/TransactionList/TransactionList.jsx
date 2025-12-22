@@ -1,29 +1,12 @@
-import { useState } from 'react'
 import TransactionItem from '../TransactionItem/TransactionItem'
 import './TransactionList.scss'
 
 const TransactionList = ({ groupedTransactions, onTransactionUpdate }) => {
-  const [transactions, setTransactions] = useState(groupedTransactions)
-
-  const handleStatusChange = (transactionId, newStatus) => {
-    const updated = { ...transactions }
-
-    Object.keys(updated).forEach(date => {
-      updated[date] = updated[date].map(tx =>
-        tx.id === transactionId ? { ...tx, status: newStatus } : tx
-      )
-    })
-
-    setTransactions(updated)
-
-    onTransactionUpdate?.(transactionId, newStatus)
-  }
-
-  if (Object.keys(transactions).length === 0) {
+  if (Object.keys(groupedTransactions).length === 0) {
     return null
   }
 
-  const sortedDates = Object.keys(transactions).sort((a, b) => {
+  const sortedDates = Object.keys(groupedTransactions).sort((a, b) => {
     return new Date(b) - new Date(a)
   })
 
@@ -37,11 +20,11 @@ const TransactionList = ({ groupedTransactions, onTransactionUpdate }) => {
           </div>
 
           <div className="transactions-group">
-            {transactions[date].map(tx => (
+            {groupedTransactions[date].map(tx => (
               <TransactionItem
                 key={tx.id}
                 transaction={tx}
-                onStatusChange={handleStatusChange}
+                onStatusChange={onTransactionUpdate}
               />
             ))}
           </div>

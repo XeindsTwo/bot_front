@@ -1,0 +1,29 @@
+.recent-transactions {
+  margin-bottom: 26px;
+
+  &__title {
+    margin-bottom: 10px;
+    font-weight: 600;
+    display: block;
+    font-size: 16px;
+  }
+
+  &__inner {
+    @include flex-center;
+    border: 1px dashed #2b2b2d;
+    border-radius: 48px;
+    padding: 10px 10px;
+  }
+
+  &__text {
+    @include flex-align-center(4);
+    color: var(--gray);
+    font-size: 12px;
+    line-height: 1.1;
+    font-weight: 600;
+
+    a {
+      color: var(--primary-color);
+    }
+  }
+}

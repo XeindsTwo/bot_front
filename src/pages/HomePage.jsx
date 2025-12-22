@@ -3,7 +3,7 @@ import Balance from '../components/Balance/Balance.jsx'
 import AlphaTokens from '../components/AlphaTokens/AlphaTokens.jsx'
 import HomeActions from "../components/HomeActions/HomeActions.jsx"
 import CryptoList from "@/components/CryptoList/CryptoList.jsx"
-import FooterPanel from "@/components/FooterPanel/FooterPanel.jsx"
+import FooterPanel from "@/components/FooterPanelMain/FooterPanel.jsx"
 
 const HomePage = ({ tokens, loading, hideBalance, setHideBalance, onRefresh, showPulse }) => {
   return (

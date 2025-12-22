@@ -27,6 +27,8 @@ const FooterPanel = () => {
           <Link
             className={`footer-panel__link ${currentPath === '/trending' ? 'active' : ''}`}
             to={"/trending"}
+            onClick={(e) => e.preventDefault()}
+            aria-disabled="true"
           >
             <IconTwo/>
             Trending
@@ -36,6 +38,8 @@ const FooterPanel = () => {
           <Link
             className={`footer-panel__link ${currentPath === '/swap' ? 'active' : ''}`}
             to={"/swap"}
+            onClick={(e) => e.preventDefault()}
+            aria-disabled="true"
           >
             <IconThree/>
             Swap
@@ -45,6 +49,8 @@ const FooterPanel = () => {
           <Link
             className={`footer-panel__link ${currentPath === '/earn' ? 'active' : ''}`}
             to={"/earn"}
+            onClick={(e) => e.preventDefault()}
+            aria-disabled="true"
           >
             <IconFour/>
             Earn
@@ -54,6 +60,8 @@ const FooterPanel = () => {
           <Link
             className={`footer-panel__link ${currentPath === '/discover' ? 'active' : ''}`}
             to={"/discover"}
+            onClick={(e) => e.preventDefault()}
+            aria-disabled="true"
           >
             <IconFive/>
             Discover

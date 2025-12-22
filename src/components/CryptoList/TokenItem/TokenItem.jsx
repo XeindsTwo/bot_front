@@ -1,5 +1,5 @@
 import './TokenItem.scss'
-import { Link } from 'react-router-dom'
+import {Link} from 'react-router-dom'
 import TokenIcon from '../TokenIcon/TokenIcon.jsx'
 import CopyButton from '../CopyButton/CopyButton.jsx'
 
@@ -37,14 +37,30 @@ const TokenItem = ({ token }) => {
     price_change_24h = 0,
     network,
     address,
-    full_name
+    full_name,
+    name
   } = token
+
+  const getDisplaySymbol = () => {
+    if (symbol.includes('USDT_')) {
+      return 'USDT'
+    }
+    return symbol
+  }
+
+  const getDisplaySpan = () => {
+    if (symbol.includes('USDT_')) {
+      return symbol.split('_')[1] || ''
+    }
+    return full_name
+  }
 
   return (
     <li>
       <Link
         to={`/token/${symbol.toLowerCase()}`}
         className="token-item"
+        state={{full_name: full_name}}
       >
         <div className="token-item__left">
           <TokenIcon
@@ -54,8 +70,8 @@ const TokenItem = ({ token }) => {
           <div className="token-item__info">
             <div className="token-item__info-top">
               <p className="token-item__name">
-                {symbol}
-                <span>{full_name}</span>
+                {getDisplaySymbol()}
+                <span>{getDisplaySpan()}</span>
               </p>
               {address && <CopyButton address={address} />}
             </div>

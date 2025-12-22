@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import PageHeader from "@/components/PageHeader/PageHeader.jsx";
 import TransactionList from './components/TransactionList/TransactionList'
 import LoadingSpinner from './components/LoadingSpinner/LoadingSpinner'
-import FooterPanel from '../../components/FooterPanel/FooterPanel'
+import FooterPanel from '../../components/FooterPanelMain/FooterPanel'
 import './TransactionHistory.scss'
 
 const TransactionHistory = ({ isTransitioning }) => {

@@ -44,6 +44,9 @@
   }
 
   &__change {
+    font-weight: 400;
+    font-family: var(--font-base);
+
     &.negative {
       color: var(--red);
     }

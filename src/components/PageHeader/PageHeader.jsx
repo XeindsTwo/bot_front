@@ -5,6 +5,7 @@ import BackIcon from '../../assets/images/icons/back.svg'
 
 const PageHeader = ({
                       title,
+                      subtitle,
                       backUrl = "/",
                       showSettings = false,
                       onSettingsClick,
@@ -16,7 +17,10 @@ const PageHeader = ({
       <Link to={backUrl} className="page-header__back">
         <BackIcon/>
       </Link>
-      <h1 className="page-header__title">{title}</h1>
+      <h1 className="page-header__title">
+        {title}
+        {subtitle && <span>{subtitle}</span>}
+      </h1>
       <div className="page-header__right">
         {rightComponent ? (
           rightComponent

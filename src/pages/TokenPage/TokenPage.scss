@@ -1,0 +1,75 @@
+.token-page {
+  &__top {
+    text-align: center;
+    margin: 3px 0 40px;
+  }
+
+  &__price {
+    font-size: 34px;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  &__change {
+    @include flex-align-center(6);
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+
+    &.up {
+      color: #29aa74;
+    }
+
+    &.down {
+      color: var(--red);
+    }
+  }
+
+  .loading-spinner {
+    text-align: center;
+    padding: 60px 0;
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid #3A3A3C;
+      border-top-color: #0A84FF;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 16px;
+    }
+
+    p {
+      color: #8E8E93;
+      font-size: 16px;
+    }
+  }
+
+  &.error {
+    text-align: center;
+    padding: 60px 0;
+
+    p {
+      color: #FF5C5C;
+      margin-bottom: 24px;
+      font-size: 16px;
+    }
+
+    button {
+      background: #0A84FF;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 12px 24px;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: opacity 0.2s;
+
+      &:hover {
+        opacity: 0.9;
+      }
+    }
+  }
+}
