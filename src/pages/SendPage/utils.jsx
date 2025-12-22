@@ -30,12 +30,9 @@ export const createValidators = (tokenData) => {
   return { validateAddress, validateAmount }
 }
 
-export const getPreviewData = (formData, symbol, tokenData, getTokenImage) => ({
-  from: '0xYourWalletAddress...',
-  to: formData.address,
-  amount: formData.amount,
+export const getPreviewData = (formData, symbol, tokenData) => ({
   token: symbol,
-  tokenAmount: tokenData?.token_amount || 0,
-  tokenImage: getTokenImage(symbol),
+  amount: formData.amount,
+  to: formData.address,
   tokenData: tokenData
 })

@@ -7,6 +7,7 @@ import TransactionDetailPage from './pages/TransactionDetailPage/TransactionDeta
 import TransitionSpinner from './components/TransitionSpinner/TransitionSpinner'
 import {useWalletData} from './hooks/useWalletData'
 import SendPage from "@/pages/SendPage/SendPage.jsx";
+import TransactionPreview from "@/pages/TransactionPreview/TransactionPreview.jsx";
 
 function App() {
   const {
@@ -57,6 +58,7 @@ function App() {
             <TransactionDetailPage/>
           }/>
           <Route path="/send/:symbol" element={<SendPage />} />
+          <Route path="/send/preview" element={<TransactionPreview />} />
         </Routes>
       </div>
     </div>

@@ -1,0 +1,146 @@
+// TransactionPreview.scss
+.transaction-preview {
+  padding: 16px;
+  min-height: 100vh;
+  background: #0a0a0a;
+  color: #fff;
+}
+
+.preview-card {
+  background: #1a1a1a;
+  border-radius: 16px;
+  padding: 24px;
+  margin-top: 20px;
+  border: 1px solid #333;
+}
+
+.loading-skeleton {
+  .skeleton-line {
+    height: 20px;
+    background: linear-gradient(90deg, #333 25%, #444 50%, #333 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+    border-radius: 4px;
+    margin-bottom: 16px;
+
+    &.wide { width: 70%; }
+    &.short { width: 40%; }
+  }
+}
+
+@keyframes loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.error-state {
+  text-align: center;
+  padding: 40px 20px;
+
+  p {
+    color: #ff6b6b;
+    margin-bottom: 24px;
+  }
+
+  .back-btn {
+    background: #007aff;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+
+    &:hover {
+      background: #0056cc;
+    }
+  }
+}
+
+.token-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #333;
+
+  .token-icon {
+    img {
+      border-radius: 50%;
+      object-fit: contain;
+    }
+  }
+
+  .token-info {
+    flex: 1;
+
+    .token-symbol {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .token-network {
+      font-size: 14px;
+      color: #8e8e93;
+    }
+  }
+
+  .token-amount {
+    text-align: right;
+
+    .amount-crypto {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .amount-usd {
+      font-size: 16px;
+      color: #8e8e93;
+    }
+  }
+}
+
+.transaction-details {
+  .detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 0;
+    border-bottom: 1px solid #2a2a2a;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &.total {
+      margin-top: 8px;
+      padding-top: 20px;
+      border-top: 2px solid #333;
+
+      .detail-value {
+        font-size: 20px;
+        font-weight: 600;
+        color: #34c759;
+      }
+    }
+  }
+
+  .detail-label {
+    font-size: 16px;
+    color: #8e8e93;
+  }
+
+  .detail-value {
+    font-size: 16px;
+    font-weight: 500;
+    text-align: right;
+
+    &.address {
+      font-family: monospace;
+      font-size: 14px;
+    }
+  }
+}

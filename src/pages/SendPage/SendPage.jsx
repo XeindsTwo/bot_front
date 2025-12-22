@@ -63,7 +63,12 @@ const SendPage = () => {
 
     if (!addressError && !amountError) {
       navigate(`/send/preview`, {
-        state: getPreviewData(formData, symbol, tokenData, getTokenImage)
+        state: {
+          token: symbol,
+          amount: formData.amount,
+          to: formData.address,
+          tokenData: tokenData
+        }
       })
     }
   }

@@ -8,6 +8,10 @@ const AddressInput = ({ value, onChange, onBlur, error, touched, inputRef }) => 
         <input
           ref={inputRef}
           type="text"
+          autoComplete="off"
+          autoCapitalize="none"
+          autoCorrect="off"
+          spellCheck="false"
           id="address"
           name="address"
           className={error && touched ? 'error' : ''}
