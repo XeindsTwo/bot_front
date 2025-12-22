@@ -3,12 +3,17 @@ import {useLocation, useNavigate} from 'react-router-dom';
 import PageHeader from '@/components/PageHeader/PageHeader';
 import TokenHeader from './components/TokenHeader/TokenHeader.jsx';
 import DetailRow from './components/DetailRow/DetailRow.jsx';
+import Skeleton, {SkeletonTheme} from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 import {
   getNetworkIconName,
   getNetworkIconNameFromFee,
   formatAddress
 } from './components/utils';
+import FeeNextIcon from "../../assets/images/icons/fee-next.svg"
+import InfoTransactionIcon from "../../assets/images/icons/info_transaction.svg"
 import './TransactionPreview.scss';
+import {API_BASE_URL} from "@/config/api.js";
 
 const TransactionReview = () => {
   const location = useLocation();
@@ -28,7 +33,7 @@ const TransactionReview = () => {
       try {
         setLoading(true);
 
-        const response = await fetch('http://localhost:8000/api/send/preview', {
+        const response = await fetch(`${API_BASE_URL}/api/send/preview`, {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({
@@ -64,7 +69,9 @@ const TransactionReview = () => {
     try {
       setSending(true);
 
-      const response = await fetch('http://localhost:8000/api/send/confirm', {
+      await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 500));
+
+      const response = await fetch(`${API_BASE_URL}/api/send/confirm`, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
@@ -93,93 +100,188 @@ const TransactionReview = () => {
     }
   };
 
-  if (loading) {
-    return (
-        <>
-          <PageHeader title="Confirm" backUrl={-1} showSettings={true}/>
-        </>
-    );
-  }
-
   const networkIconName = getNetworkIconName(
-      network || previewData?.network
+    network || previewData?.network_name
   );
 
   const feeNetworkIconName = getNetworkIconNameFromFee(
-      previewData?.amounts?.network_fee_currency
+    previewData?.amounts?.network_fee_currency
   );
 
   return (
+    <SkeletonTheme baseColor="#4D4D4E" highlightColor="#6B6B6B" speed={1}>
       <>
         <PageHeader title="Confirm" backUrl={-1} showSettings={true}/>
-        <TokenHeader
-            displaySymbol={displaySymbol}
-            amount={amount}
-            previewData={previewData}
-            networkIconName={networkIconName}
-        />
+
+        <div className="transaction-review">
+          <div className="transaction-review__wrapper">
+            <img
+              src={`/images/tokens/${displaySymbol?.toLowerCase().split('_')[0]}.png`}
+              alt={displaySymbol}
+              onError={(e) => e.target.src = '/images/tokens/default.png'}
+              className="transaction-review__image"
+              width={36}
+              height={36}
+            />
+            {networkIconName && (
+              <img
+                src={`/images/networks/${networkIconName}.png`}
+                alt="network"
+                className="transaction-review__badge"
+                width={16}
+                height={16}
+              />
+            )}
+          </div>
+          <div className="transaction-review__amount">
+            {loading ? (
+              <>
+                <Skeleton width={80} height={23}/>
+                <Skeleton width={80} height={17}/>
+              </>
+            ) : (
+              <>
+                <p className="transaction-review__crypto">{amount} {displaySymbol}</p>
+                <p className="transaction-review__usd">
+                  ≈ ${previewData?.amounts?.amount_usd?.toLocaleString('en-US', {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2
+                })}
+                </p>
+              </>
+            )}
+          </div>
+        </div>
 
         <div className="transaction-review__details">
           <div className="transaction-review__block">
             <DetailRow
-                label="Token"
-                value={displaySymbol}
+              label="Token"
+              value={displaySymbol}
             />
+
             <DetailRow
-                label="From"
-                value={formatAddress(previewData.addresses.from, 'medium')}
-                isAddress={true}
+              label="From"
+              value={formatAddress(to, 'medium')}
+              isAddress={true}
+              showExplorerIcon={true}
             />
+
             <DetailRow
-                label="To"
-                value={formatAddress(previewData.addresses.to, 'medium')}
-                isAddress={true}
+              label="To"
+              value={formatAddress(to, 'medium')}
+              isAddress={true}
+              showExplorerIcon={true}
             />
-            <DetailRow
-                label="Amount"
-                value={`${amount} ${displaySymbol}`}
-            />
-            <DetailRow
-                label="Network"
-                value={previewData.network}
-            />
+
+            <div className="detail-transaction-row">
+              <span className="detail-transaction-row__label">Amount</span>
+              {loading ? (
+                <Skeleton width={90} height={16}/>
+              ) : (
+                <span className="detail-transaction-row__value">
+                  {amount} {displaySymbol}
+                </span>
+              )}
+            </div>
+
+            <div className="detail-transaction-row">
+              <span className="detail-transaction-row__label">Network</span>
+              {loading ? (
+                <Skeleton width={90} height={16}/>
+              ) : (
+                <span className="detail-transaction-row__value">
+                  {previewData?.network_name || network}
+                </span>
+              )}
+            </div>
           </div>
 
-          {/* Второй блок: Комиссия */}
-          {previewData.amounts.network_fee > 0 && (
-              <div className="transaction-review__block transaction-review__block--fee">
-                <DetailRow
-                    label="Network Fee"
-                    feeData={{
-                      amount: previewData.amounts.network_fee,
-                      currency: previewData.amounts.network_fee_currency,
-                      networkIconName: feeNetworkIconName
-                    }}
-                />
-              </div>
-          )}
+          <div className="transaction-review__block transaction-review__block--fee">
+            <div className="detail-transaction-row">
+              <span className="detail-transaction-row__label">Network Fee</span>
+              {loading ? (
+                <div className="detail-transaction-row__fee-container">
+                  <div className="detail-transaction-row__fee-section">
+                    <div className="detail-transaction-row__fee-top">
+                      <Skeleton width={90} height={15.2}/>
+                    </div>
+                    <div className="detail-transaction-row__fee-bottom">
+                      <Skeleton width={90} height={15.6}/>
+                    </div>
+                  </div>
+                  <FeeNextIcon/>
+                </div>
+              ) : previewData?.amounts?.network_fee > 0 ? (
+                <div className="detail-transaction-row__fee-container">
+                  <div className="detail-transaction-row__fee-section">
+                    <div className="detail-transaction-row__fee-top">
+                      {feeNetworkIconName && (
+                        <img
+                          src={`/images/tokens/${feeNetworkIconName}.png`}
+                          alt="network"
+                          className="detail-transaction-row__network-icon"
+                          width={16}
+                          height={16}
+                        />
+                      )}
+                      <span className="detail-transaction-row__fee-usd">
+                        ${previewData.amounts.network_fee_usd}
+                      </span>
+                    </div>
+                    <div className="detail-transaction-row__fee-bottom">
+                      <span className="detail-transaction-row__fee-amount">
+                        {previewData.amounts.network_fee} {previewData.amounts.network_fee_currency}
+                      </span>
+                    </div>
+                  </div>
+                  <FeeNextIcon/>
+                </div>
+              ) : (
+                <span className="detail-transaction-row__value">Free</span>
+              )}
+            </div>
+          </div>
 
-          {/* Третий блок: Итог */}
-          <div className="transaction-review__block transaction-review__block--total">
-            <DetailRow
-                label="Total USD"
-                value={`$${previewData.amounts.total_usd.toLocaleString('en-US', {
+          <div className="transaction-review__block">
+            <div className="detail-transaction-row detail-transaction-row--total">
+              <p className="detail-transaction-row__label">
+                Total USD
+                <InfoTransactionIcon/>
+              </p>
+              {loading ? (
+                <Skeleton width={120} height={17.19}/>
+              ) : (
+                <span className="detail-transaction-row__value detail-transaction-row__value--total">
+                  ${previewData?.amounts?.total_usd?.toLocaleString('en-US', {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2
-                })}`}
-                isTotal={true}
-            />
+                })}
+                </span>
+              )}
+            </div>
           </div>
         </div>
 
         <button
-            onClick={handleConfirm}
-            disabled={sending}
-            className="btn"
+          onClick={handleConfirm}
+          disabled={sending || loading}
+          className="btn bottom"
         >
-          {sending ? 'Sending...' : 'Continue'}
+          {sending ? (
+            <div className="btn-spinner">
+              <div className="spinner"></div>
+            </div>
+          ) : loading ? (
+            <div className="btn-spinner">
+              <div className="spinner"></div>
+            </div>
+          ) : (
+            'Confirm'
+          )}
         </button>
       </>
+    </SkeletonTheme>
   );
 };
 

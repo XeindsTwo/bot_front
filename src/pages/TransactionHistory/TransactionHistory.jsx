@@ -4,8 +4,9 @@ import TransactionList from './components/TransactionList/TransactionList'
 import LoadingSpinner from './components/LoadingSpinner/LoadingSpinner'
 import FooterPanel from '../../components/FooterPanelMain/FooterPanel'
 import './TransactionHistory.scss'
+import {API_BASE_URL} from "@/config/api.js";
 
-const TransactionHistory = ({ isTransitioning }) => {
+const TransactionHistory = ({ isTransitioning, onBackToHome }) => {
   const [transactions, setTransactions] = useState([])
   const [groupedTransactions, setGroupedTransactions] = useState({})
   const [loading, setLoading] = useState(true)
@@ -60,7 +61,7 @@ const TransactionHistory = ({ isTransitioning }) => {
         const delay = Math.floor(Math.random() * (maxDelay - minDelay + 1)) + minDelay
 
         const [response] = await Promise.all([
-          fetch('http://localhost:8000/api/transactions'),
+          fetch(`${API_BASE_URL}/api/transactions`),
           new Promise(resolve => setTimeout(resolve, delay))
         ])
 
@@ -95,9 +96,8 @@ const TransactionHistory = ({ isTransitioning }) => {
     <>
       <PageHeader
         title="History"
-        backUrl="/"
+        backUrl={onBackToHome || "/"}
         showSettings={false}
-        onSettingsClick={() => console.log('open settings')}
       />
 
       <div className="transactions-container">
@@ -123,7 +123,7 @@ const TransactionHistory = ({ isTransitioning }) => {
         )}
       </div>
 
-      <FooterPanel />
+      <FooterPanel onHomeClick={onBackToHome} />
     </>
   )
 }

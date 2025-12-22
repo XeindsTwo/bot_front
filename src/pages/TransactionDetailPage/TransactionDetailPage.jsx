@@ -8,6 +8,7 @@ import AmountSection from './components/AmountSection'
 import DetailGrid from './components/DetailGrid'
 import {getTitle} from './components/transactionUtils.jsx'
 import './TransactionDetailPage.scss'
+import {API_BASE_URL} from "@/config/api.js";
 
 const TransactionDetailPage = () => {
   const {id} = useParams()
@@ -20,7 +21,7 @@ const TransactionDetailPage = () => {
     const fetchTransactionDetails = async () => {
       try {
         setLoading(true)
-        const response = await fetch(`http://localhost:8000/api/transactions/${id}`)
+        const response = await fetch(`${API_BASE_URL}/api/transactions/${id}`)
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`)

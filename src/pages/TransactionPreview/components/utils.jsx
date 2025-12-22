@@ -49,7 +49,7 @@ export const getNetworkIconNameFromFee = (feeCurrency) => {
 export const formatAddress = (address) => {
   if (!address) return '';
   if (address.length <= 20) return address;
-  return `${address.substring(0, 15)}...${address.substring(address.length - 15)}`;
+  return `${address.substring(0, 13)}...${address.substring(address.length - 13)}`;
 };
 
 export const getTokenImage = (symbol) => {

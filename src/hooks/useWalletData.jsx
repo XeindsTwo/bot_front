@@ -1,4 +1,5 @@
 import {useState, useEffect, useRef, useCallback} from 'react'
+import {API_BASE_URL} from "@/config/api.js";
 
 export const useWalletData = () => {
   const [tokens, setTokens] = useState([])
@@ -9,7 +10,7 @@ export const useWalletData = () => {
 
   const refreshAllData = useCallback(async () => {
     try {
-      const response = await fetch('http://localhost:8000/api/tokens/refresh-balances', {
+      const response = await fetch(`${API_BASE_URL}/api/tokens/refresh-balances`, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'}
       })

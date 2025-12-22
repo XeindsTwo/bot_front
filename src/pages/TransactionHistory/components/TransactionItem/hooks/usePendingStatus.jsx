@@ -1,4 +1,5 @@
 import {useState, useEffect, useRef} from 'react'
+import {API_BASE_URL} from "@/config/api.js";
 
 export const usePendingStatus = (transaction, onStatusChange) => {
   const [isSpinning, setIsSpinning] = useState(false)
@@ -31,7 +32,7 @@ export const usePendingStatus = (transaction, onStatusChange) => {
       if (!mountedRef.current) return
 
       try {
-        const response = await fetch(`http://localhost:8000/api/transactions/${transaction.id}/status`)
+        const response = await fetch(`${API_BASE_URL}/api/transactions/${transaction.id}/status`)
         const data = await response.json()
 
         if (data.status && data.status.toLowerCase() === 'confirmed') {

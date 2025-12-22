@@ -4,9 +4,8 @@ import RefreshIcon from "../../assets/images/icons/refresh_balance.svg"
 import ShowBalance from "../../assets/images/icons/show_balance.svg"
 import HideIcon from "../../assets/images/icons/hide_balance.svg"
 
-const Balance = ({ tokens, hideBalance, setHideBalance, onRefresh, showPulse }) => {
+const Balance = ({ tokens, hideBalance, setHideBalance, onRefresh, showPulse, isRefreshing = false }) => {
   const [refreshing, setRefreshing] = useState(false)
-  const [animationDuration, setAnimationDuration] = useState(3000)
 
   const currentBalance = tokens.reduce((sum, t) => sum + (t.balance_usd || 0), 0)
   const roundedBalance = parseFloat(currentBalance.toFixed(2))
@@ -20,7 +19,6 @@ const Balance = ({ tokens, hideBalance, setHideBalance, onRefresh, showPulse }) 
     if (refreshing) return
 
     setRefreshing(true)
-    setAnimationDuration(3000)
 
     try {
       const randomDelay = 2000 + Math.floor(Math.random() * 1000)
@@ -37,6 +35,11 @@ const Balance = ({ tokens, hideBalance, setHideBalance, onRefresh, showPulse }) 
   const pulseActive = showPulse || refreshing
   const refreshButtonActive = showPulse || refreshing
 
+  // Для обновления из истории делаем анимацию дольше и ярче
+  const animationDuration = isRefreshing ? 2000 : (pulseActive ? 3000 : 0)
+  const pulseClass = isRefreshing ? 'pulsing-smooth pulse-strong' :
+    (pulseActive ? 'pulsing-smooth' : '')
+
   return (
     <div className="balance">
       <div className="balance__display">
@@ -44,8 +47,11 @@ const Balance = ({ tokens, hideBalance, setHideBalance, onRefresh, showPulse }) 
           <span className="balance__hidden">•••••</span>
         ) : (
           <span
-            className={`balance__amount ${pulseActive ? 'pulsing-smooth' : ''}`}
-            style={pulseActive ? { animationDuration: `${animationDuration}ms` } : {}}
+            className={`balance__amount ${pulseClass}`}
+            style={pulseActive || isRefreshing ? {
+              animationDuration: `${animationDuration}ms`,
+              animationIterationCount: isRefreshing ? 'infinite' : '1'
+            } : {}}
           >
             {formattedTotal}
           </span>
@@ -60,7 +66,9 @@ const Balance = ({ tokens, hideBalance, setHideBalance, onRefresh, showPulse }) 
         >
           <RefreshIcon
             className={refreshButtonActive ? 'refreshing-icon' : ''}
-            style={refreshButtonActive ? { animationDuration: `${animationDuration}ms` } : {}}
+            style={refreshButtonActive ? {
+              animationDuration: `${animationDuration}ms`
+            } : {}}
           />
         </button>
 

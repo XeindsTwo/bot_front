@@ -2,6 +2,7 @@ import './AlphaTokens.scss'
 import Skeleton, {SkeletonTheme} from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import {useEffect, useState} from "react";
+import {API_BASE_URL} from "@/config/api.js";
 
 const AlphaTokens = () => {
   const [alphaTokens, setAlphaTokens] = useState([])
@@ -11,7 +12,7 @@ const AlphaTokens = () => {
   useEffect(() => {
     const fetchTokens = async () => {
       try {
-        const res = await fetch('http://localhost:8000/api/alpha/tokens')
+        const res = await fetch(`${API_BASE_URL}/api/alpha/tokens`)
         const data = await res.json()
 
         const tokens = data.map(token => ({

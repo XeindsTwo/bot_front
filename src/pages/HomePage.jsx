@@ -5,7 +5,16 @@ import HomeActions from "../components/HomeActions/HomeActions.jsx"
 import CryptoList from "@/components/CryptoList/CryptoList.jsx"
 import FooterPanel from "@/components/FooterPanelMain/FooterPanel.jsx"
 
-const HomePage = ({ tokens, loading, hideBalance, setHideBalance, onRefresh, showPulse }) => {
+const HomePage = ({
+                    tokens,
+                    loading,
+                    hideBalance,
+                    setHideBalance,
+                    onRefresh,
+                    showPulse,
+                    onHomeClick,
+                    isRefreshing = false
+                  }) => {
   return (
     <>
       <Header />
@@ -14,16 +23,17 @@ const HomePage = ({ tokens, loading, hideBalance, setHideBalance, onRefresh, sho
         hideBalance={hideBalance}
         setHideBalance={setHideBalance}
         onRefresh={onRefresh}
-        showPulse={showPulse}
+        showPulse={showPulse || isRefreshing}
+        isRefreshing={isRefreshing} // Новый пропс
       />
       <HomeActions />
       <div className="trust-main">
         <div className="trust-main__wrapper">
           <AlphaTokens />
-          <CryptoList tokens={tokens} loading={loading} />
+          <CryptoList tokens={tokens} loading={loading || isRefreshing} />
         </div>
       </div>
-      <FooterPanel />
+      <FooterPanel onHomeClick={onHomeClick} />
     </>
   )
 }

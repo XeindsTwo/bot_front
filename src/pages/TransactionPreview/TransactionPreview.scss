@@ -4,8 +4,44 @@
   }
 
   &__block {
+    @include flex-column(24);
     background: var(--black-100);
     padding: 10px 16px;
     border-radius: 16px;
+  }
+
+  &__header-skeleton {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 0;
+    background: var(--card-background);
+    margin: 10px;
+    border-radius: 16px;
+  }
+
+  &__token-skeleton {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  &__amounts-skeleton {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &__crypto-skeleton {
+    border-radius: 6px;
+  }
+
+  &__usd-skeleton {
+    border-radius: 4px;
+  }
+
+  &__network-skeleton {
+    border-radius: 10px;
   }
 }

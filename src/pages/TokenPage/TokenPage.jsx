@@ -12,6 +12,7 @@ import 'react-loading-skeleton/dist/skeleton.css'
 import ChangeDown from "../../assets/images/icons/change_down.svg"
 import ChangeUp from "../../assets/images/icons/change_up.svg"
 import './TokenPage.scss'
+import {API_BASE_URL} from "@/config/api.js";
 
 const TokenPage = () => {
     const {symbol} = useParams()
@@ -24,7 +25,7 @@ const TokenPage = () => {
         const fetchTokenData = async () => {
             try {
                 setLoading(true)
-                const response = await fetch(`http://localhost:8000/api/token/${symbol}`)
+                const response = await fetch(`${API_BASE_URL}/api/token/${symbol}`)
 
                 if (!response.ok) {
                     throw new Error(`HTTP ${response.status}`)
@@ -51,7 +52,7 @@ const TokenPage = () => {
             setTransactionsLoading(true)
             const currentCount = tokenTransactions.length
             const response = await fetch(
-                `http://localhost:8000/api/token/${symbol}/transactions?limit=20&page=${Math.floor(currentCount / 20) + 1}`
+                `${API_BASE_URL}/api/token/${symbol}/transactions?limit=20&page=${Math.floor(currentCount / 20) + 1}`
             )
 
             if (response.ok) {
