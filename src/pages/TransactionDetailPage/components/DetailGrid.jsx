@@ -60,10 +60,12 @@ const DetailGrid = ({transaction}) => {
         />
       )}
 
-      <DetailRow
-        label="Network"
-        value={transaction.network}
-      />
+        {transaction.network && transaction.network.trim() !== '' && (
+            <DetailRow
+                label="Network"
+                value={transaction.network}
+            />
+        )}
 
       <DetailRow
         label="Total USD"

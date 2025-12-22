@@ -1,0 +1,52 @@
+.detail-transaction-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+
+  &--total {
+    .detail-transaction-row__label {
+      font-size: 16px;
+      font-weight: 500;
+      color: #fff;
+    }
+
+    .detail-transaction-row__value--total {
+      font-size: 18px;
+      font-weight: 600;
+      color: #4CAF50;
+    }
+  }
+
+  &__label {
+    font-size: 15px;
+    color: #aaa;
+  }
+
+  &__value {
+    font-size: 15px;
+    color: #fff;
+    text-align: right;
+
+    &--address {
+      font-family: monospace;
+      font-size: 13px;
+    }
+  }
+
+  &__value--with-icon {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__fee-amount {
+    font-size: 15px;
+    color: #fff;
+  }
+
+  &__network-icon {
+    border-radius: 50%;
+    object-fit: cover;
+  }
+}

@@ -1,38 +1,27 @@
 export const getTokenImage = (symbol) => {
-  if (!symbol) return '/images/tokens/default.png'
-  const imageMap = {
-    'bnb': 'bnb.png', 'btc': 'btc.png', 'eth': 'eth.png',
-    'matic': 'matic.png', 'pol': 'matic.png', 'tron': 'tron.png',
-    'trx': 'tron.png', 'sol': 'sol.png', 'ton': 'ton.png',
-    'usdt': 'usdt.png', 'twt': 'twt.png',
-  }
-  return `/images/tokens/${imageMap[symbol.toLowerCase()] || 'default.png'}`
-}
+  const cleanSymbol = symbol.split('_')[0];
+  return `/images/tokens/${cleanSymbol.toLowerCase()}.png`;
+};
 
 export const createValidators = (tokenData) => {
-  const validateAddress = (address) => {
-    if (!address) return ''
-    if (address.length < 10) return 'Address is too short'
-    if (address.length > 100) return 'Address is too long'
-    return ''
-  }
+  const validateAddress = (value) => {
+    const address = String(value || '');
+    if (!address.trim()) return 'Address is required';
+    if (address.length < 10) return 'Address is too short';
+    return '';
+  };
 
-  const validateAmount = (amount) => {
-    if (!amount) return ''
-    const numAmount = parseFloat(amount)
-    const balance = parseFloat(tokenData?.token_amount || 0)
-    if (isNaN(numAmount)) return 'Invalid amount'
-    if (numAmount <= 0) return 'Amount must be greater than 0'
-    if (numAmount > balance) return 'Not enough balance'
-    return ''
-  }
+  const validateAmount = (value) => {
+    const amountStr = String(value || '');
+    if (!amountStr.trim()) return 'Amount is required';
+    const numValue = parseFloat(amountStr);
+    if (isNaN(numValue)) return 'Invalid amount';
+    if (numValue <= 0) return 'Amount must be greater than 0';
+    if (tokenData?.token_amount && numValue > tokenData.token_amount) {
+      return 'Insufficient balance';
+    }
+    return '';
+  };
 
-  return { validateAddress, validateAmount }
-}
-
-export const getPreviewData = (formData, symbol, tokenData) => ({
-  token: symbol,
-  amount: formData.amount,
-  to: formData.address,
-  tokenData: tokenData
-})
+  return {validateAddress, validateAmount};
+};
