@@ -1,24 +1,26 @@
-import {useState, useEffect} from 'react';
-import {useLocation, useNavigate} from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/PageHeader/PageHeader';
 import TokenHeader from './components/TokenHeader/TokenHeader.jsx';
 import DetailRow from './components/DetailRow/DetailRow.jsx';
-import Skeleton, {SkeletonTheme} from 'react-loading-skeleton';
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import {
   getNetworkIconName,
+  isNativeCoin,
   getNetworkIconNameFromFee,
-  formatAddress
+  formatAddress,
+  normalizeTokenSymbol
 } from './components/utils';
-import FeeNextIcon from "../../assets/images/icons/fee-next.svg"
-import InfoTransactionIcon from "../../assets/images/icons/info_transaction.svg"
+import FeeNextIcon from "../../assets/images/icons/fee-next.svg";
+import InfoTransactionIcon from "../../assets/images/icons/info_transaction.svg";
 import './TransactionPreview.scss';
-import {API_BASE_URL} from "@/config/api.js";
+import { API_BASE_URL } from "@/config/api.js";
 
 const TransactionReview = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const {token, db_symbol, amount, to, network} = location.state || {};
+  const { token, db_symbol, amount, to, network, formData, tokenData } = location.state || {};
 
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
@@ -27,6 +29,18 @@ const TransactionReview = () => {
 
   const displaySymbol = token || '';
   const apiSymbol = db_symbol || token || '';
+  const normalizedSymbol = normalizeTokenSymbol(displaySymbol);
+
+  const handleBackWithFormData = () => {
+    navigate(`/send/${db_symbol || token}`, {
+      state: {
+        tokenData: location.state?.tokenData,
+        preservedFormData: formData || { address: to, amount: amount },
+        from: location.state?.from || `/token/${token}`
+      },
+      replace: true
+    });
+  };
 
   useEffect(() => {
     const fetchPreview = async () => {
@@ -35,7 +49,7 @@ const TransactionReview = () => {
 
         const response = await fetch(`${API_BASE_URL}/api/send/preview`, {
           method: 'POST',
-          headers: {'Content-Type': 'application/json'},
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             token: apiSymbol,
             amount: parseFloat(amount),
@@ -69,17 +83,22 @@ const TransactionReview = () => {
     try {
       setSending(true);
 
-      await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 500));
+      // Используем final_send_amount для нативных монет, оригинальный amount для токенов
+      const sendAmount = previewData?.amounts?.is_native
+        ? previewData?.amounts?.final_send_amount
+        : previewData?.amounts?.token_amount;
 
       const response = await fetch(`${API_BASE_URL}/api/send/confirm`, {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           token: apiSymbol,
-          amount: parseFloat(amount),
+          amount: parseFloat(sendAmount || amount), // ВАЖНО: отправляем final_send_amount для нативных
           to: to,
           network_fee: previewData?.amounts?.network_fee || 0,
-          total_usd: previewData?.amounts?.total_usd || 0
+          total_usd: previewData?.amounts?.total_usd || 0,
+          is_native: previewData?.amounts?.is_native || false,
+          original_amount: parseFloat(amount) // Оригинальная сумма с фронта
         })
       });
 
@@ -87,6 +106,7 @@ const TransactionReview = () => {
 
       const data = await response.json();
       if (data.success) {
+        localStorage.removeItem(`send_form_${apiSymbol}`);
         navigate('/history', {
           state: {
             newTransaction: data.transaction,
@@ -100,30 +120,32 @@ const TransactionReview = () => {
     }
   };
 
-  const networkIconName = getNetworkIconName(
-    network || previewData?.network_name
-  );
+  const networkName = network || previewData?.network_name || '';
+  const networkIconName = getNetworkIconName(networkName);
 
-  const feeNetworkIconName = getNetworkIconNameFromFee(
-    previewData?.amounts?.network_fee_currency
-  );
+  const shouldShowMainBadge =
+    !isNativeCoin(displaySymbol, networkName) ||
+    displaySymbol?.toUpperCase() === 'TWT';
+
+  const feeCurrency = previewData?.amounts?.network_fee_currency || '';
+  const feeIconName = getNetworkIconNameFromFee(feeCurrency) || normalizedSymbol;
 
   return (
     <SkeletonTheme baseColor="#4D4D4E" highlightColor="#6B6B6B" speed={1}>
       <>
-        <PageHeader title="Confirm" backUrl={-1} showSettings={true}/>
+        <PageHeader title="Confirm" backUrl={handleBackWithFormData} showSettings={true} />
 
         <div className="transaction-review">
           <div className="transaction-review__wrapper">
             <img
-              src={`/images/tokens/${displaySymbol?.toLowerCase().split('_')[0]}.png`}
+              src={`/images/tokens/${normalizedSymbol}.png`}
               alt={displaySymbol}
               onError={(e) => e.target.src = '/images/tokens/default.png'}
               className="transaction-review__image"
               width={36}
               height={36}
             />
-            {networkIconName && (
+            {networkIconName && shouldShowMainBadge && (
               <img
                 src={`/images/networks/${networkIconName}.png`}
                 alt="network"
@@ -136,12 +158,14 @@ const TransactionReview = () => {
           <div className="transaction-review__amount">
             {loading ? (
               <>
-                <Skeleton width={80} height={23}/>
-                <Skeleton width={80} height={17}/>
+                <Skeleton width={80} height={23} />
+                <Skeleton width={80} height={17} />
               </>
             ) : (
               <>
-                <p className="transaction-review__crypto">{amount} {displaySymbol}</p>
+                <p className="transaction-review__crypto">
+                  {previewData?.amounts?.token_amount} {displaySymbol}
+                </p>
                 <p className="transaction-review__usd">
                   ≈ ${previewData?.amounts?.amount_usd?.toLocaleString('en-US', {
                   minimumFractionDigits: 2,
@@ -177,10 +201,10 @@ const TransactionReview = () => {
             <div className="detail-transaction-row">
               <span className="detail-transaction-row__label">Amount</span>
               {loading ? (
-                <Skeleton width={90} height={16}/>
+                <Skeleton width={90} height={16} />
               ) : (
                 <span className="detail-transaction-row__value">
-                  {amount} {displaySymbol}
+                  {previewData?.amounts?.token_amount} {displaySymbol}
                 </span>
               )}
             </div>
@@ -188,7 +212,7 @@ const TransactionReview = () => {
             <div className="detail-transaction-row">
               <span className="detail-transaction-row__label">Network</span>
               {loading ? (
-                <Skeleton width={90} height={16}/>
+                <Skeleton width={90} height={16} />
               ) : (
                 <span className="detail-transaction-row__value">
                   {previewData?.network_name || network}
@@ -204,27 +228,26 @@ const TransactionReview = () => {
                 <div className="detail-transaction-row__fee-container">
                   <div className="detail-transaction-row__fee-section">
                     <div className="detail-transaction-row__fee-top">
-                      <Skeleton width={90} height={15.2}/>
+                      <Skeleton width={90} height={15.2} />
                     </div>
                     <div className="detail-transaction-row__fee-bottom">
-                      <Skeleton width={90} height={15.6}/>
+                      <Skeleton width={90} height={15.6} />
                     </div>
                   </div>
-                  <FeeNextIcon/>
+                  <FeeNextIcon />
                 </div>
               ) : previewData?.amounts?.network_fee > 0 ? (
                 <div className="detail-transaction-row__fee-container">
                   <div className="detail-transaction-row__fee-section">
                     <div className="detail-transaction-row__fee-top">
-                      {feeNetworkIconName && (
-                        <img
-                          src={`/images/tokens/${feeNetworkIconName}.png`}
-                          alt="network"
-                          className="detail-transaction-row__network-icon"
-                          width={16}
-                          height={16}
-                        />
-                      )}
+                      <img
+                        src={`/images/tokens/${feeIconName}.png`}
+                        alt="network"
+                        className="detail-transaction-row__network-icon"
+                        width={16}
+                        height={16}
+                        onError={(e) => e.target.src = '/images/tokens/default.png'}
+                      />
                       <span className="detail-transaction-row__fee-usd">
                         ${previewData.amounts.network_fee_usd}
                       </span>
@@ -235,7 +258,7 @@ const TransactionReview = () => {
                       </span>
                     </div>
                   </div>
-                  <FeeNextIcon/>
+                  <FeeNextIcon />
                 </div>
               ) : (
                 <span className="detail-transaction-row__value">Free</span>
@@ -247,10 +270,10 @@ const TransactionReview = () => {
             <div className="detail-transaction-row detail-transaction-row--total">
               <p className="detail-transaction-row__label">
                 Total USD
-                <InfoTransactionIcon/>
+                <InfoTransactionIcon />
               </p>
               {loading ? (
-                <Skeleton width={120} height={17.19}/>
+                <Skeleton width={120} height={17.19} />
               ) : (
                 <span className="detail-transaction-row__value detail-transaction-row__value--total">
                   ${previewData?.amounts?.total_usd?.toLocaleString('en-US', {

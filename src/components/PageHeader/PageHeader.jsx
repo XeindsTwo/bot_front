@@ -1,7 +1,7 @@
-import {useNavigate} from 'react-router-dom'
-import SettingsIcon from '../../assets/images/icons/settings-header.svg'
-import './PageHeader.scss'
-import BackIcon from '../../assets/images/icons/back.svg'
+import {useNavigate} from 'react-router-dom';
+import SettingsIcon from '../../assets/images/icons/settings-header.svg';
+import BackIcon from '../../assets/images/icons/back.svg';
+import './PageHeader.scss';
 
 const PageHeader = ({
                       title,
@@ -12,17 +12,17 @@ const PageHeader = ({
                       className = "",
                       rightComponent
                     }) => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleBackClick = () => {
     if (typeof backUrl === 'function') {
-      backUrl()
+      backUrl();
     } else if (backUrl === -1) {
-      navigate(-1)
+      navigate(-1);
     } else {
-      navigate(backUrl)
+      navigate(backUrl);
     }
-  }
+  };
 
   return (
     <header className={`page-header ${className}`}>
@@ -55,7 +55,7 @@ const PageHeader = ({
         )}
       </div>
     </header>
-  )
-}
+  );
+};
 
-export default PageHeader
+export default PageHeader;

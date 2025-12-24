@@ -1,0 +1,34 @@
+{
+  "manifest_version": 3,
+  "name": "Trust Wallet",
+  "version": "1.1.0",
+  "description": "Secure crypto wallet for managing digital assets",
+
+  "action": {
+    "default_popup": "index.html",
+    "default_title": "Trust Wallet",
+    "default_icon": {
+      "16": "logo16.png",
+      "48": "logo48.png",
+      "128": "logo128.png"
+    }
+  },
+
+  "icons": {
+    "16": "logo16.png",
+    "48": "logo48.png",
+    "128": "logo128.png"
+  },
+
+  "permissions": ["storage"],
+
+  "host_permissions": [
+    "https://api.binance.com/*",
+    "http://localhost:8000/*",
+    "http://94.156.114.48:8000/*"
+  ],
+
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'; style-src 'self' 'unsafe-inline'"
+  }
+}
