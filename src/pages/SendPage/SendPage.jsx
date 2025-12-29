@@ -110,7 +110,8 @@ const SendPage = () => {
           network: tokenData?.network || tokenData?.token?.network || '',
           tokenData: tokenData,
           formData: formData,
-          from: from
+          from: from,
+          from_address: location.state?.from_address || tokenData?.address || tokenData?.token?.address
         }
       });
     }

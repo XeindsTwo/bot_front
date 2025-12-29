@@ -56,7 +56,8 @@ const TokenPage = () => {
     navigate(`/send/${tokenData?.token?.db_symbol || tokenData?.token?.symbol.toLowerCase()}`, {
       state: {
         tokenData: tokenData?.token,
-        from: `/token/${symbol}`
+        from: `/token/${symbol}`,
+        from_address: tokenData?.token?.address
       }
     });
   }, [navigate, tokenData, symbol]);

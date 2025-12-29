@@ -187,17 +187,24 @@ const TransactionReview = () => {
               />
 
               <DetailRow
-                  label="From"
-                  value={formatAddress(to, 'medium')}
-                  isAddress={true}
-                  showExplorerIcon={true}
+                label="From"
+                value={formatAddress(
+                  previewData?.addresses?.from ||
+                  location.state?.from_address ||
+                  tokenData?.from_address ||
+                  tokenData?.address ||
+                  '',
+                  'medium'
+                )}
+                isAddress={true}
+                showExplorerIcon={true}
               />
 
               <DetailRow
-                  label="To"
-                  value={formatAddress(to, 'medium')}
-                  isAddress={true}
-                  showExplorerIcon={true}
+                label="To"
+                value={formatAddress(to, 'medium')}
+                isAddress={true}
+                showExplorerIcon={true}
               />
 
               <div className="detail-transaction-row">

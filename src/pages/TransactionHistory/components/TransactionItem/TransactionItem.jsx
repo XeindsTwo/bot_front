@@ -38,74 +38,78 @@ const TransactionItem = ({transaction, onStatusChange}) => {
 
   if (transaction.type === 'income') {
     return (
-        <li>
-          <Link to={`/transaction/${transaction.id}`} className="transaction-item">
-            <div className="transaction-item__icon">
-              {isSpinning ? (
-                  <PendingSpinner/>
-              ) : (
-                  <ReceiveIcon/>
-              )}
-            </div>
+      <li>
+        <Link to={`/transaction/${transaction.id}`} className="transaction-item">
+          <div className="transaction-item__icon">
+            {isSpinning ? (
+              <PendingSpinner/>
+            ) : (
+              <ReceiveIcon/>
+            )}
+          </div>
 
-            <div className="transaction-details">
-              <div className="transaction-main">
+          <div className="transaction-details">
+            <div className="transaction-main">
               <span className="transaction-type">
                 Received
                 {transaction.display_symbol ? ` ${transaction.display_symbol}` : ''}
               </span>
-                {isPending && (
-                    <span className="transaction-status">
+              {isPending && (
+                <span className="transaction-status">
                   Pending
                 </span>
-                )}
-              </div>
+              )}
+            </div>
 
-              <div className="transaction-secondary">
+            <div className="transaction-secondary">
               <span className="transaction-address">
                 From: {formatAddress(transaction.from_address)}
               </span>
-              </div>
             </div>
+          </div>
 
-            <span className={`amount ${transaction.type}`}>
+          <span className={`amount ${transaction.type}`}>
             +{formatAmount(transaction.amount, transaction.display_symbol || '')}
           </span>
-          </Link>
-        </li>
+        </Link>
+      </li>
     )
   }
 
   return (
-      <li className="transaction-item">
-        <div className="transaction-item__icon">
+    <li className="transaction-item">
+      <div className="transaction-item__icon">
+        {isSpinning ? (
+          <PendingSpinner/>
+        ) : (
           <SendIcon/>
-        </div>
+        )}
+      </div>
 
-        <div className="transaction-details">
-          <div className="transaction-main">
+      <div className="transaction-details">
+        <div className="transaction-main">
           <span className="transaction-type">
             Send
             {transaction.display_symbol ? ` ${transaction.display_symbol}` : ''}
           </span>
-            {isPending && (
-                <span className="transaction-status">
+          {isPending && (
+            <span className="transaction-status">
               Pending
             </span>
-            )}
-          </div>
+          )}
+        </div>
 
-          <div className="transaction-secondary">
+        <div className="transaction-secondary">
           <span className="transaction-address">
             To: {formatAddress(transaction.to_address)}
           </span>
-          </div>
         </div>
+      </div>
 
-        <span className={`amount ${transaction.type}`}>
+      <span className={`amount ${transaction.type}`}>
         -{formatAmount(transaction.amount, transaction.display_symbol || '')}
       </span>
-      </li>
+    </li>
   )
 }
 
