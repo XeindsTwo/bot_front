@@ -6,22 +6,19 @@ const TokenTransactionItem = ({transaction, tokenSymbol}) => {
   const isPending = false
   const isSpinning = false
 
-  const formatAmount = (amount, displaySymbol) => {
-    const num = parseFloat(amount)
-    let formatted
+  const formatAmount = () => {
+    const exactAmount = transaction.amount_token_exact || 0
+    const displaySymbol = transaction.display_symbol || tokenSymbol || ''
 
-    if (num >= 1000) {
-      formatted = num.toLocaleString('en-US', {maximumFractionDigits: 0})
-    } else if (num < 0.01 && num > 0) {
-      formatted = num.toLocaleString('en-US', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 8
-      })
-    } else {
-      formatted = num.toLocaleString('en-US', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 4
-      })
+    // Используем точное значение, убираем лишние нули
+    const formatted = exactAmount.toString().replace(/(\.0*|0+)$/, '')
+
+    // Если после точки много цифр, показываем до 6 знаков
+    if (formatted.includes('.')) {
+      const parts = formatted.split('.')
+      if (parts[1].length > 6) {
+        return `${exactAmount.toFixed(6)} ${displaySymbol}`
+      }
     }
 
     return `${formatted} ${displaySymbol}`
@@ -39,23 +36,13 @@ const TokenTransactionItem = ({transaction, tokenSymbol}) => {
       <li>
         <Link to={`/transaction/${transaction.id}`} className="transaction-item">
           <div className="transaction-item__icon">
-            {isSpinning ? (
-              <div className="pending-spinner">⏳</div>
-            ) : (
-              <ReceiveIcon/>
-            )}
+            {isSpinning ? <div className="pending-spinner">⏳</div> : <ReceiveIcon/>}
           </div>
 
           <div className="transaction-details">
             <div className="transaction-main">
-              <span className="transaction-type">
-                Receive
-              </span>
-              {isPending && (
-                <span className="transaction-status">
-                  Pending
-                </span>
-              )}
+              <span className="transaction-type">Receive</span>
+              {isPending && <span className="transaction-status">Pending</span>}
             </div>
 
             <div className="transaction-secondary">
@@ -65,9 +52,7 @@ const TokenTransactionItem = ({transaction, tokenSymbol}) => {
             </div>
           </div>
 
-          <span className="amount income">
-            +{formatAmount(transaction.amount_token, tokenSymbol || '')}
-          </span>
+          <span className="amount income">+{formatAmount()}</span>
         </Link>
       </li>
     )
@@ -75,15 +60,12 @@ const TokenTransactionItem = ({transaction, tokenSymbol}) => {
 
   return (
     <li className="transaction-item">
-      <div className="transaction-item__icon">
-        <SendIcon/>
-      </div>
+      <div className="transaction-item__icon"><SendIcon/></div>
 
       <div className="transaction-details">
         <div className="transaction-main">
           <span className="transaction-type">
-            Send
-            {tokenSymbol ? ` ${tokenSymbol}` : ''}
+            Send {tokenSymbol ? tokenSymbol : ''}
           </span>
         </div>
 
@@ -94,9 +76,9 @@ const TokenTransactionItem = ({transaction, tokenSymbol}) => {
         </div>
       </div>
 
-      <span className="amount outcome">
-        -{formatAmount(transaction.amount_token, tokenSymbol || '')}
-      </span>
+      <div>
+        <div className="amount outcome">-{formatAmount()}</div>
+      </div>
     </li>
   )
 }

@@ -4,6 +4,32 @@ import {formatDateTime, formatAddress} from './transactionUtils'
 const DetailGrid = ({transaction}) => {
   if (!transaction) return null
 
+  const getNetworkDisplay = () => {
+    if (transaction.token?.network && transaction.token.network.trim() !== '') {
+      return transaction.token.network.toUpperCase()
+    }
+
+    const networkMap = {
+      'eth': 'ETH',
+      'btc': 'BTC',
+      'bnb': 'BNB',
+      'matic': 'MATIC',
+      'pol': 'MATIC',
+      'tron': 'TRON',
+      'trx': 'TRON',
+      'sol': 'SOL',
+      'ton': 'TON',
+      'twt': 'BNB',
+      'doge': 'DOGE',
+      'ltc': 'LTC',
+      'ada': 'ADA'
+    }
+
+    return networkMap[transaction.token?.db_symbol?.toLowerCase()] || ''
+  }
+
+  const networkDisplay = getNetworkDisplay()
+
   return (
     <div className="detail-grid">
       <DetailRow
@@ -50,22 +76,22 @@ const DetailGrid = ({transaction}) => {
 
       <DetailRow
         label="Amount"
-        value={`${transaction.amount_token} ${transaction.token?.symbol}`}
+        value={`${transaction.amount_token_exact || transaction.amount_token} ${transaction.token?.symbol}`}
       />
 
-      {transaction.fee > 0 && (
+      {(transaction.fee_token_exact > 0 || transaction.fee_token > 0) && (
         <DetailRow
           label="Network Fee"
-          value={`${transaction.fee} ${transaction.fee_currency}`}
+          value={`${transaction.fee_token || transaction.fee_token_exact} ${transaction.fee_currency}`}
         />
       )}
 
-        {transaction.network && transaction.network.trim() !== '' && (
-            <DetailRow
-                label="Network"
-                value={transaction.network}
-            />
-        )}
+      {networkDisplay && (
+        <DetailRow
+          label="Network"
+          value={networkDisplay}
+        />
+      )}
 
       <DetailRow
         label="Total USD"
@@ -77,5 +103,4 @@ const DetailGrid = ({transaction}) => {
     </div>
   )
 }
-
 export default DetailGrid

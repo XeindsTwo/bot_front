@@ -1,25 +1,48 @@
 import {getTokenImage} from './transactionUtils'
 
-const TokenIcon = ({symbol, network}) => {
+const TokenIcon = ({symbol, network, dbSymbol}) => {
   const getNetworkIcon = () => {
+    // Если нет сети - не показываем
     if (!network || network.trim() === '') return null
 
     const lowerNetwork = network.toLowerCase()
+    const lowerSymbol = symbol?.toLowerCase() || ''
+    const lowerDbSymbol = dbSymbol?.toLowerCase() || ''
 
-    const networkIcons = {
-      'eth': 'eth.png',
-      'bnb': 'bnb.png',
-      'tron': 'tron.png',
-      'matic': 'matic.png',
-      'btc': 'btc.png',
-      'sol': 'sol.png',
-      'ton': 'ton.png',
+    const nativeTokens = ['eth', 'btc', 'bnb', 'matic', 'pol', 'tron', 'trx', 'sol', 'ton', 'doge', 'ltc', 'ada']
+
+    // Если токен нативный И сеть совпадает с токеном - не показываем иконку сети
+    if (nativeTokens.includes(lowerSymbol) && lowerNetwork === lowerSymbol) {
+      return null
     }
 
-    const iconName = networkIcons[lowerNetwork]
-    if (!iconName) return null
+    if (lowerDbSymbol.includes('usdt_')) {
+      // USDT на BNB сети → показываем BNB иконку
+      // USDT на ETH сети → показываем ETH иконку
+      // USDT на TRON сети → показываем TRON иконку
+      const networkIcons = {
+        'eth': 'eth.png',
+        'bnb': 'bnb.png',
+        'tron': 'tron.png',
+        'matic': 'matic.png',
+        'btc': 'btc.png',
+        'sol': 'sol.png',
+        'ton': 'ton.png',
+      }
 
-    return `/images/networks/${iconName}`
+      const iconName = networkIcons[lowerNetwork]
+      if (!iconName) return null
+
+      return `/images/networks/${iconName}`
+    }
+
+    // TWT на BNB сети - показываем BNB иконку
+    if (lowerSymbol === 'twt' && lowerNetwork === 'bnb') {
+      return '/images/networks/bnb.png'
+    }
+
+    // Остальные случаи - не показываем
+    return null
   }
 
   const networkIconPath = getNetworkIcon()

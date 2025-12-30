@@ -101,7 +101,7 @@ const TransactionDetailPage = () => {
 
               <div className="detail-card">
                 <AmountSection
-                  cryptoAmount={transaction.amount_token}
+                  cryptoAmount={transaction.amount_token_exact || transaction.amount_token}
                   usdAmount={transaction.amount_usd}
                 />
 

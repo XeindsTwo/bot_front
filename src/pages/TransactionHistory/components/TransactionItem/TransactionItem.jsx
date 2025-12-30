@@ -9,7 +9,10 @@ const TransactionItem = ({transaction, onStatusChange}) => {
   const {isPending, isSpinning} = usePendingStatus(transaction, onStatusChange)
 
   const formatAmount = (amount, displaySymbol) => {
-    const num = parseFloat(amount)
+    // ИСПРАВЛЕНИЕ: используем amount_token_exact если есть, иначе amount
+    const tokenAmount = transaction.amount_token_exact || amount
+
+    const num = parseFloat(tokenAmount)
     let formatted
 
     if (num >= 1000) {
@@ -20,10 +23,14 @@ const TransactionItem = ({transaction, onStatusChange}) => {
         maximumFractionDigits: 8
       })
     } else {
+      // Показываем точное значение без округления до 4 знаков
       formatted = num.toLocaleString('en-US', {
         minimumFractionDigits: 2,
-        maximumFractionDigits: 4
+        maximumFractionDigits: 8
       })
+
+      // Убираем лишние нули в конце
+      formatted = formatted.replace(/(\.0*|0+)$/, '')
     }
 
     return `${formatted} ${displaySymbol}`
