@@ -109,12 +109,14 @@ const TokenPage = () => {
     }
 
     const token = tokenData.token;
-    const priceChangeAmount = Math.abs(token.price_change_amount || 0);
+    const currentPrice = token.current_price || 0;
     const priceChangePercent = token.price_change_24h || 0;
     const isPositive = priceChangePercent >= 0;
 
+    const priceChangeAmount = (currentPrice * priceChangePercent) / 100;
+
     const formatPriceChange = () => {
-      const amount = priceChangeAmount.toFixed(2);
+      const amount = Math.abs(priceChangeAmount).toFixed(2);
       const percent = Math.abs(priceChangePercent).toFixed(2);
       return `$${amount} (${isPositive ? '+' : '-'}${percent}%)`;
     }

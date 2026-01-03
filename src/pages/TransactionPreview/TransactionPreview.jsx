@@ -84,24 +84,30 @@ const TransactionReview = () => {
       setSending(true);
 
       const sendAmount = previewData?.amounts?.is_native
-          ? previewData?.amounts?.final_send_amount
-          : previewData?.amounts?.token_amount;
+        ? previewData?.amounts?.final_send_amount
+        : previewData?.amounts?.token_amount;
 
       const amountUsd = previewData?.amounts?.amount_usd || 0;
+
+      const requestData = {
+        token: apiSymbol,
+        amount: parseFloat(sendAmount || amount),  // Округленное значение
+        to: to,
+        network_fee: previewData?.amounts?.network_fee || 0,
+        total_usd: previewData?.amounts?.total_usd || 0,
+        is_native: previewData?.amounts?.is_native || false,
+        original_amount: parseFloat(amount),  // Исходная сумма с фронта
+        // ТОЧНЫЕ ЗНАЧЕНИЯ ДЛЯ РАСЧЕТА!
+        final_send_amount_exact: previewData?.amounts?.final_send_amount_exact || parseFloat(sendAmount || amount),
+        network_fee_exact: previewData?.amounts?.network_fee_exact || previewData?.amounts?.network_fee || 0
+      };
+
+      console.log('[FRONTEND] Отправляем данные:', requestData);
 
       const response = await fetch(`${API_BASE_URL}/api/send/confirm`, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-          token: apiSymbol,
-          amount: parseFloat(sendAmount || amount),
-          to: to,
-          network_fee: previewData?.amounts?.network_fee || 0,
-          total_usd: previewData?.amounts?.total_usd || 0,
-          is_native: previewData?.amounts?.is_native || false,
-          amount_usd: amountUsd, // ← ДОБАВЬ ЭТО!
-          original_amount: parseFloat(amount)
-        })
+        body: JSON.stringify(requestData)
       });
 
       if (!response.ok) throw new Error('Ошибка отправки');

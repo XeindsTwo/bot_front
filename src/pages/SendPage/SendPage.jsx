@@ -1,15 +1,15 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import {useState, useRef, useEffect, useCallback} from 'react';
+import {useParams, useNavigate, useLocation} from 'react-router-dom';
 import PageHeader from '@/components/PageHeader/PageHeader';
 import TokenHeader from './Components/TokenHeader.jsx';
 import AddressInput from './Components/AddressInput.jsx';
 import AmountInput from './Components/AmountInput.jsx';
-import { getTokenImage, createValidators } from './utils';
-import { usePersistentForm } from '@/hooks/usePersistentForm';
+import {getTokenImage, createValidators} from './utils';
+import {usePersistentForm} from '@/hooks/usePersistentForm';
 import './SendPage.scss';
 
 const SendPage = () => {
-  const { symbol } = useParams();
+  const {symbol} = useParams();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -25,8 +25,8 @@ const SendPage = () => {
     amount: ''
   });
 
-  const [errors, setErrors] = useState({ address: '', amount: '' });
-  const [touched, setTouched] = useState({ address: false, amount: false });
+  const [errors, setErrors] = useState({address: '', amount: ''});
+  const [touched, setTouched] = useState({address: false, amount: false});
   const addressInputRef = useRef(null);
   const amountInputRef = useRef(null);
 
@@ -38,13 +38,13 @@ const SendPage = () => {
     ...(preservedFormData ? {} : {})
   };
 
-  const { validateAddress, validateAmount } = createValidators(tokenData);
+  const {validateAddress, validateAmount} = createValidators(tokenData);
 
   useEffect(() => {
     if (preservedFormData) {
-      const { address, amount } = preservedFormData;
-      updateForm({ address, amount });
-      setTouched({ address: true, amount: true });
+      const {address, amount} = preservedFormData;
+      updateForm({address, amount});
+      setTouched({address: true, amount: true});
       setErrors({
         address: validateAddress(address),
         amount: validateAmount(amount)
@@ -66,39 +66,39 @@ const SendPage = () => {
   }, [symbol]);
 
   const handleAddressChange = useCallback((value) => {
-    updateForm({ address: value });
-    if (touched.address) setErrors({ ...errors, address: validateAddress(value) });
+    updateForm({address: value});
+    if (touched.address) setErrors({...errors, address: validateAddress(value)});
   }, [touched.address, errors, validateAddress, updateForm]);
 
   const handleAmountChange = useCallback((value) => {
-    updateForm({ amount: value });
-    if (touched.amount) setErrors({ ...errors, amount: validateAmount(value) });
+    updateForm({amount: value});
+    if (touched.amount) setErrors({...errors, amount: validateAmount(value)});
   }, [touched.amount, errors, validateAmount, updateForm]);
 
   const handleBlur = useCallback((field) => {
-    setTouched(prev => ({ ...prev, [field]: true }));
+    setTouched(prev => ({...prev, [field]: true}));
     if (field === 'address') {
-      setErrors(prev => ({ ...prev, address: validateAddress(formData.address) }));
+      setErrors(prev => ({...prev, address: validateAddress(formData.address)}));
     } else if (field === 'amount') {
-      setErrors(prev => ({ ...prev, amount: validateAmount(formData.amount) }));
+      setErrors(prev => ({...prev, amount: validateAmount(formData.amount)}));
     }
   }, [formData.address, formData.amount, validateAddress, validateAmount]);
 
   const handleMaxClick = useCallback(() => {
-    const maxAmount = tokenData?.token_amount || 0;
-    updateForm({ amount: maxAmount });
-    setTouched(prev => ({ ...prev, amount: true }));
-    setErrors(prev => ({ ...prev, amount: validateAmount(maxAmount) }));
+    const maxAmount = tokenData?.balance_tokens || tokenData?.token_amount || 0;
+    updateForm({amount: maxAmount});
+    setTouched(prev => ({...prev, amount: true}));
+    setErrors(prev => ({...prev, amount: validateAmount(maxAmount)}));
   }, [tokenData, validateAmount, updateForm]);
 
   const handleSubmit = useCallback((e) => {
     e.preventDefault();
-    setTouched({ address: true, amount: true });
+    setTouched({address: true, amount: true});
 
     const addressError = validateAddress(formData.address);
     const amountError = validateAmount(formData.amount);
 
-    setErrors({ address: addressError, amount: amountError });
+    setErrors({address: addressError, amount: amountError});
 
     if (!addressError && !amountError) {
       navigate(`/send/preview`, {
@@ -120,7 +120,7 @@ const SendPage = () => {
   const isFormValid = !errors.address && !errors.amount && formData.address && formData.amount;
 
   if (!originalTokenData && !preservedFormData) {
-    return <PageHeader title="Loading..." backUrl={from} />;
+    return <PageHeader title="Loading..." backUrl={from}/>;
   }
 
   const shouldShowNetworkBadge = (tokenSymbol, network) => {
@@ -177,7 +177,7 @@ const SendPage = () => {
           error={errors.amount}
           touched={touched.amount}
           onMaxClick={handleMaxClick}
-          balance={tokenData?.token_amount || 0}
+          balance={tokenData?.balance_tokens || tokenData?.token_amount || 0}
           symbol={displaySymbol}
           inputRef={amountInputRef}
         />

@@ -14,12 +14,16 @@ export const createValidators = (tokenData) => {
   const validateAmount = (value) => {
     const amountStr = String(value || '');
     if (!amountStr.trim()) return 'Amount is required';
+
     const numValue = parseFloat(amountStr);
     if (isNaN(numValue)) return 'Invalid amount';
     if (numValue <= 0) return 'Amount must be greater than 0';
-    if (tokenData?.token_amount && numValue > tokenData.token_amount) {
+
+    const balance = tokenData?.balance_tokens || tokenData?.token_amount || 0;
+    if (numValue > balance) {
       return 'Insufficient balance';
     }
+
     return '';
   };
 

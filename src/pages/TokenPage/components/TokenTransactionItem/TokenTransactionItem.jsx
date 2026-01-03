@@ -9,18 +9,21 @@ const TokenTransactionItem = ({transaction, tokenSymbol}) => {
   const formatAmount = () => {
     const exactAmount = transaction.amount_token_exact || 0
     const displaySymbol = transaction.display_symbol || tokenSymbol || ''
+    const displayAmount = transaction.amount_token_display || ''
 
-    // Используем точное значение, убираем лишние нули
-    const formatted = exactAmount.toString().replace(/(\.0*|0+)$/, '')
-
-    // Если после точки много цифр, показываем до 6 знаков
-    if (formatted.includes('.')) {
-      const parts = formatted.split('.')
-      if (parts[1].length > 6) {
-        return `${exactAmount.toFixed(6)} ${displaySymbol}`
-      }
+    if (displayAmount) {
+      return `${displayAmount} ${displaySymbol}`
     }
 
+    // Фоллбэк: форматируем точное значение
+    const amount = parseFloat(exactAmount)
+
+    if (amount % 1 === 0) {
+      return `${amount} ${displaySymbol}`
+    }
+
+    // Для дробных чисел показываем до 6 знаков
+    const formatted = amount.toFixed(6).replace(/\.?0+$/, '')
     return `${formatted} ${displaySymbol}`
   }
 
